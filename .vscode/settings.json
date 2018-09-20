@@ -1,0 +1,13 @@
+{
+    "editor.minimap.enabled": false,
+    "editor.dragAndDrop": false,
+    "editor.occurrencesHighlight": false,
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true, 
+        "**/obj": true
+    }
+}

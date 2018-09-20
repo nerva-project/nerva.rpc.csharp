@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../Nerva.Rpc.targets"/>
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <AssemblyName>Nerva.Rpc.Tests</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nerva.Rpc\Nerva.Rpc.csproj"/>
+  </ItemGroup>
+</Project>

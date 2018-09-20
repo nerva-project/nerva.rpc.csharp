@@ -1,0 +1,30 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug",
+            "type": "mono",
+            "request": "launch",
+            "program": "${workspaceRoot}/Bin/Debug/Nerva.Rpc.Tests.exe",
+            "cwd": "${workspaceRoot}/Bin",
+            "preLaunchTask": "build-debug",
+            "args":[ ]
+        },
+        {
+            "name": "Release",
+            "type": "mono",
+            "request": "launch",
+            "program": "${workspaceRoot}/Bin/Release/Nerva.Rpc.Tests.exe",
+            "cwd": "${workspaceRoot}/Bin",
+            "preLaunchTask": "build-release",
+            "args":[ ]
+        },
+        {
+            "name": "Attach",
+            "type": "mono",
+            "request": "attach",
+            "address": "localhost",
+            "port": 55555
+        }
+    ]
+}

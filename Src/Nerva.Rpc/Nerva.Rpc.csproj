@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../Nerva.Rpc.targets"/>
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <AssemblyName>Nerva.Rpc</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="*"/>
+  </ItemGroup>
+</Project>
