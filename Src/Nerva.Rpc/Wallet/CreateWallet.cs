@@ -3,21 +3,18 @@ using Newtonsoft.Json;
 
 namespace Nerva.Rpc.Wallet
 {
-    public class CreateWallet : Request
+    public class CreateWallet : RpcRequest<CreateWalletRequestData, string>
     {
-        public CreateWallet (Action<string> completeAction, Action failedAction)
-            : base (completeAction, failedAction) { }
+        public CreateWallet (CreateWalletRequestData rpcData, Action<string> completeAction, Action failedAction, uint port = 17566)
+            : base (rpcData, completeAction, failedAction, port) { }
             
-        protected override bool SendAction(out string result)
+        protected override bool DoRequest(out string result)
         {
-            return BasicRequest("create_wallet", new CreateWalletData {
-                FileName = walletName,
-                Password = password
-            }, out result);
+            return BasicRequest("create_wallet", rpcData, out result);
         }
     }
 
-    public class CreateWalletData : OpenWalletData
+    public class CreateWalletRequestData : OpenWalletRequestData
     {
         private const string LANGUAGE = "English";
 

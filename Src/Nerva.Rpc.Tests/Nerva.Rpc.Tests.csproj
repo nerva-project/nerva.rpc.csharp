@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../Nerva.Rpc.targets"/>
   <PropertyGroup>
+    <TargetFramework>net471</TargetFramework>
     <OutputType>WinExe</OutputType>
     <AssemblyName>Nerva.Rpc.Tests</AssemblyName>
   </PropertyGroup>

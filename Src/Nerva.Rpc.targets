@@ -15,7 +15,8 @@
     <Optimize>true</Optimize>
     <OutputPath>../../Bin/$(Configuration)</OutputPath>
   </PropertyGroup>
-    <ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="../../External/AngryWasp.Logger/Src/AngryWasp.Logger/AngryWasp.Logger.csproj" />
+    <ProjectReference Include="../../External/AngryWasp.Helpers/Src/AngryWasp.Helpers/AngryWasp.Helpers.csproj" />
   </ItemGroup>
 </Project>

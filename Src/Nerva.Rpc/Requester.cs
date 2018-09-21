@@ -8,7 +8,13 @@ namespace Nerva.Rpc
 {
     public class RequestData
     {
-        public uint Port { get; set; } = 0;
+        private uint port = 0;
+        public uint Port => port;
+
+        public RequestData(uint port)
+        {
+            this.port = port;
+        }
     }
 
     public class Requester

@@ -11,6 +11,18 @@
             "args":[ ]
         },
         {
+            "name": "Test-Create",
+            "type": "mono",
+            "request": "launch",
+            "program": "${workspaceRoot}/Bin/Debug/Nerva.Rpc.Tests.exe",
+            "cwd": "${workspaceRoot}/Bin",
+            "preLaunchTask": "build-debug",
+            "args":[
+                "--test", "create",
+                "--port", "23456"
+            ]
+        },
+        {
             "name": "Release",
             "type": "mono",
             "request": "launch",

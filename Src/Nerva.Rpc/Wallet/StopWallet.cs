@@ -2,15 +2,14 @@ using System;
 
 namespace Nerva.Rpc.Wallet
 {
-    public class StopWallet : Request
+    public class StopWallet : RpcRequest<object, string>
     {
-        public StopWallet (Action<string> completeAction, Action failedAction)
-            : base (completeAction, failedAction) { }
-            
-        protected override bool SendAction(out string result)
+        public StopWallet (Action<string> completeAction, Action failedAction, uint port = 17566)
+            : base (null, completeAction, failedAction, port) { }
+
+        protected override bool DoRequest(out string result)
         {
-            result = null;
-            return BasicRequest("stop_wallet");
+            return BasicRequest("stop_wallet", null, out result);
         }
     }
 }
