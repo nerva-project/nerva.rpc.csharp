@@ -7,14 +7,14 @@ namespace Nerva.Rpc.Wallet
 {
     public class GetTransfers : RpcRequest<GetTransfersRequestData, GetTransfersResponseData>
     {
-        public GetTransfers (GetTransfersRequestData rpcData, Action<GetTransfersResponseData> completeAction, Action failedAction, uint port = 17566)
+        public GetTransfers (GetTransfersRequestData rpcData, Action<GetTransfersResponseData> completeAction, Action<RequestError> failedAction, uint port = 17566)
             : base (rpcData, completeAction, failedAction, port) { }
             
         protected override bool DoRequest(out GetTransfersResponseData result)
         {
-            string rpc = null;
-            bool r = BasicRequest("get_transfers", rpcData, out rpc);
-            result = r ? JsonConvert.DeserializeObject<JsonResponse<GetTransfersResponseData>>(rpc).Result : null;
+            string json = null;
+            bool r = BasicRequest("get_transfers", rpcData, out json);
+            result = r ? JsonConvert.DeserializeObject<JsonResponse<GetTransfersResponseData>>(json).Result : null;
 
             return r;
         }

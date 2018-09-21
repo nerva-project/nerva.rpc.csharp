@@ -5,7 +5,7 @@ namespace Nerva.Rpc.Wallet
 {
     public class OpenWallet : RpcRequest<OpenWalletRequestData, string>
     {
-        public OpenWallet(OpenWalletRequestData rpcData, Action<string> completeAction, Action failedAction, uint port = 17566)
+        public OpenWallet(OpenWalletRequestData rpcData, Action<string> completeAction, Action<RequestError> failedAction, uint port = 17566)
             : base (rpcData, completeAction, failedAction, port) { }
             
         protected override bool DoRequest(out string result)
