@@ -21,10 +21,10 @@ namespace Nerva.Rpc.Tests
         {
             Log.CreateInstance(true);
 
-            //Test_GetBlockCount().Wait();
-            //Test_GetInfo().Wait();
-            //Test_StopMining().Wait();
-            //Test_StartMining().Wait();
+            Test_GetBlockCount();
+            Test_GetInfo();
+            Test_StopMining();
+            Test_StartMining();
             //Test_StopDaemon().Wait();
             //Test_SetBans();
         }
@@ -48,7 +48,7 @@ namespace Nerva.Rpc.Tests
             return (ulong)(i * 1000000000000.0d);
         }
 
-        public static Task Test_CreateWallet()
+        public static bool Test_CreateWallet()
         {
             return new CreateWallet(new CreateWalletRequestData {
                 FileName = walletName,
@@ -61,7 +61,7 @@ namespace Nerva.Rpc.Tests
             }, walletPort).Run();  
         }
 
-        public static Task Test_OpenWallet()
+        public static bool Test_OpenWallet()
         {
             return new OpenWallet(new OpenWalletRequestData {
                 FileName = walletName,
@@ -74,7 +74,7 @@ namespace Nerva.Rpc.Tests
             }, walletPort).Run();  
         }
 
-        public static Task Test_StopWallet()
+        public static bool Test_StopWallet()
         {
             return new StopWallet((string result) => {
                 Log.Instance.Write("StopWallet: Passed");
@@ -84,7 +84,7 @@ namespace Nerva.Rpc.Tests
             }, walletPort).Run();  
         }
 
-        public static Task Test_GetAccounts()
+        public static bool Test_GetAccounts()
         {
             return new GetAccounts((GetAccountsResponseData result) => {
                 Log.Instance.Write("GetAccounts: Passed, {0} XNV", result.TotalBalance);
@@ -94,7 +94,7 @@ namespace Nerva.Rpc.Tests
             }, walletPort).Run();  
         }
 
-        public static Task Test_GetTransfers()
+        public static bool Test_GetTransfers()
         {
             return new GetTransfers(new GetTransfersRequestData {
                 AccountIndex = 0
@@ -106,7 +106,7 @@ namespace Nerva.Rpc.Tests
             }, walletPort).Run();  
         }
 
-        public static Task Test_QueryKey()
+        public static bool Test_QueryKey()
         {
             return new QueryKey(new QueryKeyRequestData {
                 KeyType = Key_Type.All_Keys.ToString().ToLower()
@@ -117,7 +117,7 @@ namespace Nerva.Rpc.Tests
             }, walletPort).Run();  
         }
 
-        public static Task Test_CreateAccount()
+        public static bool Test_CreateAccount()
         {
             return new CreateAccount(new CreateAccountRequestData {
                 Label = "New Account"
@@ -128,7 +128,7 @@ namespace Nerva.Rpc.Tests
             }, walletPort).Run();  
         }
 
-        public static Task Test_Transfer_NoPaymentId()
+        public static bool Test_Transfer_NoPaymentId()
         {
             return new Transfer(new TransferRequestData {
                 Destinations = new List<TransferDestination>{
@@ -148,7 +148,7 @@ namespace Nerva.Rpc.Tests
             }, walletPort).Run();  
         }
 
-        public static Task Test_Transfer_PaymentId()
+        public static bool Test_Transfer_PaymentId()
         {
             return new Transfer(new TransferRequestData {
                 Destinations = new List<TransferDestination>{
@@ -169,7 +169,7 @@ namespace Nerva.Rpc.Tests
             }, walletPort).Run();  
         }
 
-        public static Task Test_GetBlockCount()
+        public static bool Test_GetBlockCount()
         {
             return new GetBlockCount((uint result) => {
                 Log.Instance.Write("GetBlockCount: Passed, {0}", result);
@@ -179,7 +179,7 @@ namespace Nerva.Rpc.Tests
             }, daemonPort).Run();  
         }
 
-        public static Task Test_GetInfo()
+        public static bool Test_GetInfo()
         {
             return new GetInfo((GetInfoResponseData result) => {
                 Log.Instance.Write("GetInfo: Passed, {0}", result.Version);
@@ -189,7 +189,7 @@ namespace Nerva.Rpc.Tests
             }, daemonPort).Run();  
         }
 
-        public static Task Test_GetConnections()
+        public static bool Test_GetConnections()
         {
             return new GetConnections((List<GetConnectionsResponseData> result) => {
                 Log.Instance.Write("GetConnections: Passed, {0} connections", result.Count);
@@ -199,7 +199,7 @@ namespace Nerva.Rpc.Tests
             }, daemonPort).Run();  
         }
 
-        public static Task Test_StartMining()
+        public static bool Test_StartMining()
         {
             return new StartMining(new StartMiningRequestData {
                 MinerAddress = "NV1r8P6THPASAQX77re6hXTMJ1ykXXvtYXFXgMv4vFAQNYo3YatUvZ8LFNRu4dPQBjTwqJbMvqoeiipywmREPHpD2AgWnmG7Q",
@@ -212,7 +212,7 @@ namespace Nerva.Rpc.Tests
             }, daemonPort).Run();  
         }
 
-        public static Task Test_StopMining()
+        public static bool Test_StopMining()
         {
             return new StopMining((string result) => {
                 Log.Instance.Write("StopMining: Passed");
@@ -222,7 +222,7 @@ namespace Nerva.Rpc.Tests
             }, daemonPort).Run();  
         }
 
-        public static Task Test_StopDaemon()
+        public static bool Test_StopDaemon()
         {
             return new StopDaemon((string result) => {
                 Log.Instance.Write("StopDaemon: Passed");
@@ -234,11 +234,11 @@ namespace Nerva.Rpc.Tests
 
         public static void Test_SetBans()
         {
-            Test_SetBans(true).Wait();
-            Test_SetBans(false).Wait();
+            Test_SetBans(true);
+            Test_SetBans(false);
         }
 
-        private static Task Test_SetBans(bool ban)
+        private static bool Test_SetBans(bool ban)
         {
             return new SetBans(new SetBansRequestData {
                 Bans = new List<Ban> {

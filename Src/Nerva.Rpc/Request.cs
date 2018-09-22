@@ -31,7 +31,7 @@ namespace Nerva.Rpc
 
         protected abstract bool DoRequest(out T_Resp result);
 
-        public async Task Run()
+        public async Task RunAsync()
         {
             await Task.Run( () => {
                 T_Resp result;
@@ -40,6 +40,19 @@ namespace Nerva.Rpc
                 else
                     failedAction?.Invoke(e);
             });
+        }
+
+        public bool Run()
+        {
+            T_Resp result;
+            bool ok = DoRequest(out result);
+
+            if (ok)
+                completeAction?.Invoke(result);
+            else
+                failedAction?.Invoke(e);
+
+            return ok;
         }
 
         protected bool RpcRequest(string methodName, string postData, out string result)
