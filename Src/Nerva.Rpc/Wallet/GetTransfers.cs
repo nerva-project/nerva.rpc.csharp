@@ -5,17 +5,16 @@ using Newtonsoft.Json;
 
 namespace Nerva.Rpc.Wallet
 {
-    public class GetTransfers : RpcRequest<GetTransfersRequestData, GetTransfersResponseData>
+    public class GetTransfers : Request<GetTransfersRequestData, GetTransfersResponseData>
     {
-        public GetTransfers (GetTransfersRequestData rpcData, Action<GetTransfersResponseData> completeAction, Action<RequestError> failedAction, uint port = 17566)
+        public GetTransfers(GetTransfersRequestData rpcData, Action<GetTransfersResponseData> completeAction, Action<RequestError> failedAction, uint port = 17566)
             : base (rpcData, completeAction, failedAction, port) { }
             
         protected override bool DoRequest(out GetTransfersResponseData result)
         {
             string json = null;
-            bool r = BasicRequest("get_transfers", rpcData, out json);
+            bool r = JsonRpcRequest("get_transfers", rpcData, out json);
             result = r ? JsonConvert.DeserializeObject<JsonResponse<GetTransfersResponseData>>(json).Result : null;
-
             return r;
         }
     }
@@ -52,17 +51,17 @@ namespace Nerva.Rpc.Wallet
     public class GetTransfersResponseData
     {
         [JsonProperty("in")]
-        public List<Transfer> Incoming { get; set; } = new List<Transfer>();
+        public List<TransferItem> Incoming { get; set; } = new List<TransferItem>();
 
         [JsonProperty("out")]
-        public List<Transfer> Outgoing { get; set; } = new List<Transfer>();
+        public List<TransferItem> Outgoing { get; set; } = new List<TransferItem>();
 
         [JsonProperty("pending")]
-        public List<Transfer> Pending { get; set; } = new List<Transfer>();
+        public List<TransferItem> Pending { get; set; } = new List<TransferItem>();
     }
 
     [JsonObject]
-    public class Transfer
+    public class TransferItem
     {
         [JsonProperty("txid")]
         public string TxId { get; set; } = string.Empty;
@@ -89,11 +88,11 @@ namespace Nerva.Rpc.Wallet
         public string Type { get; set; } = string.Empty;
 
         [JsonProperty("destinations")]
-        public List<Destination> Destinations { get; set; } = new List<Destination>();
+        public List<TransferDestination> Destinations { get; set; } = new List<TransferDestination>();
     }
 
     [JsonObject]
-    public class Destination
+    public class TransferDestination
     {
         [JsonProperty("amount")]
         public ulong Amount { get; set; } = 0;

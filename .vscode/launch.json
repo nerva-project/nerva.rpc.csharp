@@ -11,16 +11,13 @@
             "args":[ ]
         },
         {
-            "name": "Test-Create",
+            "name": "Test",
             "type": "mono",
             "request": "launch",
             "program": "${workspaceRoot}/Bin/Debug/Nerva.Rpc.Tests.exe",
             "cwd": "${workspaceRoot}/Bin",
             "preLaunchTask": "build-debug",
-            "args":[
-                "--test", "create",
-                "--port", "23456"
-            ]
+            "args":[]
         },
         {
             "name": "Release",

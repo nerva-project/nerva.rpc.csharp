@@ -3,16 +3,16 @@ using Newtonsoft.Json;
 
 namespace Nerva.Rpc.Wallet
 {
-    public class GetTransferByTxID : RpcRequest<GetTransferByTxIDRequestData,GetTransferByTxIDResponseData>
+    public class GetTransferByTxID : Request<GetTransferByTxIDRequestData, GetTransferByTxIDResponseData>
     {
-        public GetTransferByTxID (GetTransferByTxIDRequestData rpcData, Action<GetTransferByTxIDResponseData> completeAction, Action<RequestError> failedAction, uint port = 17566)
+        public GetTransferByTxID(GetTransferByTxIDRequestData rpcData, Action<GetTransferByTxIDResponseData> completeAction, Action<RequestError> failedAction, uint port = 17566)
             : base (rpcData, completeAction, failedAction, port) { }
             
         protected override bool DoRequest(out GetTransferByTxIDResponseData result)
         {
             string json = null;
-            bool r = BasicRequest("get_transfer_by_txid", rpcData, out json);
-            result = r ? JsonConvert.DeserializeObject<JsonResponse<GetTransferByTxIDResponseData>>(json).Result : null;
+            bool r = JsonRpcRequest("get_transfer_by_txid", rpcData, out json);
+            result = r ? JsonConvert.DeserializeObject<JsonResponse<GetTransferByTxIDResponseDataTemp>>(json).Result.Transfer : null;
             return r;
         }
     }
@@ -25,14 +25,14 @@ namespace Nerva.Rpc.Wallet
     }
 
     [JsonObject]
-    public class GetTransferByTxIDResponseData
+    public class GetTransferByTxIDResponseDataTemp
     {
         [JsonProperty("transfer")]
-        public TransferTxID Transfer { get; set; }
+        public GetTransferByTxIDResponseData Transfer { get; set; }
     }
 
     [JsonObject]
-    public class TransferTxID : Transfer
+    public class GetTransferByTxIDResponseData : TransferItem
     {
         [JsonProperty("unlock_time")]
         public ulong UnlockTime { get; set; } = 0;

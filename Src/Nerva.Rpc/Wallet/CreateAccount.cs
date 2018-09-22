@@ -5,15 +5,15 @@ using Newtonsoft.Json;
 
 namespace Nerva.Rpc.Wallet
 {
-    public class CreateAccount : RpcRequest<CreateAccountRequestData, CreateAccountResponseData>
+    public class CreateAccount : Request<CreateAccountRequestData, CreateAccountResponseData>
     {
-        public CreateAccount (CreateAccountRequestData rpcData, Action<CreateAccountResponseData> completeAction, Action<RequestError> failedAction, uint port = 17566)
+        public CreateAccount(CreateAccountRequestData rpcData, Action<CreateAccountResponseData> completeAction, Action<RequestError> failedAction, uint port = 17566)
             : base (rpcData, completeAction, failedAction, port) { }
             
         protected override bool DoRequest(out CreateAccountResponseData result)
         {
             string json = null;
-            bool r = BasicRequest("create_account", rpcData, out json);
+            bool r = JsonRpcRequest("create_account", rpcData, out json);
             result = r ? JsonConvert.DeserializeObject<JsonResponse<CreateAccountResponseData>>(json).Result : null;
             return r;
         }

@@ -4,10 +4,11 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using AngryWasp.Logger;
+using System.Net;
 
 namespace Nerva.Rpc
 {
-    public abstract class RpcRequest<T_Req, T_Resp>
+    public abstract class Request<T_Req, T_Resp>
     {
         protected RequestError e;
         protected RequestData d;
@@ -18,7 +19,7 @@ namespace Nerva.Rpc
         public RequestError Error => e;
         public RequestData Data => d;
 
-        public RpcRequest(T_Req rpcData, Action<T_Resp> completeAction, Action<RequestError> failedAction, uint port = 17566)
+        public Request(T_Req rpcData, Action<T_Resp> completeAction, Action<RequestError> failedAction, uint port = 17566)
         {
             e = new RequestError();
             d = new RequestData(port);
@@ -41,7 +42,31 @@ namespace Nerva.Rpc
             });
         }
 
-        protected bool BasicRequest(string rpc, T_Req param, out string result)
+        protected bool RpcRequest(string methodName, string postData, out string result)
+        {
+            result = null;
+
+            if (!new Requester(d).MakeRpcRequest(methodName, postData, out result))
+            {
+                Log.Instance.Write(Log_Severity.Error, "Could not complete JSON RPC call: {0}", methodName);
+                return false;
+            }
+
+            var status = JObject.Parse(result)["status"].Value<string>();
+            var ok = status.ToLower() == "ok";
+
+            if (!ok)
+            {
+                e.Code = 0; //no error code provided for rpc methods
+                e.Message = status;
+                Log.Instance.Write(Log_Severity.Error, "RPC call returned error {0}: {1}", e.Code, e.Message);
+                return false;
+            }
+
+            return true;
+        }
+
+        protected bool JsonRpcRequest(string rpc, T_Req param, out string result)
         {
             result = null;
 
@@ -60,28 +85,19 @@ namespace Nerva.Rpc
                 return false;
             }
 
-            if (HasError(result))
-            {
-                Log.Instance.Write(Log_Severity.Error, "JSON RPC call returned error {0}: {1}", e.Code, e.Message);
-                return false;
-            }
-
-            return true;
-        }
-
-        protected bool HasError(string result)
-        {
             var error = JObject.Parse(result)["error"];
 
             if (error != null)
             {
                 e.Code = error["code"].Value<int>();
                 e.Message = error["message"].Value<string>();
+
+                Log.Instance.Write(Log_Severity.Error, "JSON RPC call returned error {0}: {1}", e.Code, e.Message);
                 
-                return true;
+                return false;
             }
 
-            return false;
+            return true;
         }
     }
 

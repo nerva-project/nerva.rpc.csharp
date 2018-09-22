@@ -5,7 +5,6 @@ transfer
 transfer_split
 sweep_dust
 sweep_all
-store
 get_payments
 get_bulk_payments
 incoming_transfers

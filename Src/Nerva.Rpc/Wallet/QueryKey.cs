@@ -5,17 +5,16 @@ using Newtonsoft.Json;
 
 namespace Nerva.Rpc.Wallet
 {
-    public class QueryKey : RpcRequest<QueryKeyRequestData, QueryKeyResponseData>
+    public class QueryKey : Request<QueryKeyRequestData, QueryKeyResponseData>
     {
-        public QueryKey (QueryKeyRequestData rpcData, Action<QueryKeyResponseData> completeAction, Action<RequestError> failedAction, uint port = 17566)
+        public QueryKey(QueryKeyRequestData rpcData, Action<QueryKeyResponseData> completeAction, Action<RequestError> failedAction, uint port = 17566)
             : base (rpcData, completeAction, failedAction, port) { }
             
         protected override bool DoRequest(out QueryKeyResponseData result)
         {
             string json = null;
-            bool r = BasicRequest("query_key", rpcData, out json);
+            bool r = JsonRpcRequest("query_key", rpcData, out json);
             result = r ? JsonConvert.DeserializeObject<JsonResponse<QueryKeyResponseData>>(json).Result : null;
-
             return r;
         }
     }
