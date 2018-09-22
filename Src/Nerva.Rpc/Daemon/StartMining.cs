@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace Nerva.Rpc.Wallet
+namespace Nerva.Rpc.Daemon
 {
     public class StartMining : Request<StartMiningRequestData, string>
     {

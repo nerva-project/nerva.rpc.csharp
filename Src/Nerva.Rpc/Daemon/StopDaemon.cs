@@ -1,6 +1,6 @@
 using System;
 
-namespace Nerva.Rpc.Wallet
+namespace Nerva.Rpc.Daemon
 {
     public class StopDaemon : Request<object, string>
     {
