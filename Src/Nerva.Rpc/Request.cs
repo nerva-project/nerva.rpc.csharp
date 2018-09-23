@@ -10,19 +10,16 @@ namespace Nerva.Rpc
 {
     public abstract class Request<T_Req, T_Resp>
     {
-        protected RequestError e;
-        protected RequestData d;
+        protected RequestError error;
+        protected uint port;
         protected T_Req rpcData;
         protected Action<T_Resp> completeAction;
         protected Action<RequestError> failedAction;
 
-        public RequestError Error => e;
-        public RequestData Data => d;
-
         public Request(T_Req rpcData, Action<T_Resp> completeAction, Action<RequestError> failedAction, uint port = 17566)
         {
-            e = new RequestError();
-            d = new RequestData(port);
+            error = new RequestError();
+            this.port = port;
 
             this.rpcData = rpcData;
             this.completeAction = completeAction;
@@ -38,7 +35,7 @@ namespace Nerva.Rpc
                 if (DoRequest(out result))
                     completeAction?.Invoke(result);
                 else
-                    failedAction?.Invoke(e);
+                    failedAction?.Invoke(error);
             });
         }
 
@@ -50,7 +47,7 @@ namespace Nerva.Rpc
             if (ok)
                 completeAction?.Invoke(result);
             else
-                failedAction?.Invoke(e);
+                failedAction?.Invoke(error);
 
             return ok;
         }
@@ -59,9 +56,11 @@ namespace Nerva.Rpc
         {
             result = null;
 
-            if (!new Requester(d).MakeRpcRequest(methodName, postData, out result))
+            if (!new Requester(port).MakeRpcRequest(methodName, postData, out result))
             {
-                Log.Instance.Write(Log_Severity.Error, "Could not complete JSON RPC call: {0}", methodName);
+                if (Configuration.LogErrors)
+                    Log.Instance.Write(Log_Severity.Error, "Could not complete JSON RPC call: {0}", methodName);
+
                 return false;
             }
 
@@ -70,9 +69,12 @@ namespace Nerva.Rpc
 
             if (!ok)
             {
-                e.Code = 0; //no error code provided for rpc methods
-                e.Message = status;
-                Log.Instance.Write(Log_Severity.Error, "RPC call returned error {0}: {1}", e.Code, e.Message);
+                error.Code = 0; //no error code provided for rpc methods
+                error.Message = status;
+
+                if (Configuration.LogErrors)
+                    Log.Instance.Write(Log_Severity.Error, "RPC call returned error {0}: {1}", error.Code, error.Message);
+
                 return false;
             }
 
@@ -84,28 +86,31 @@ namespace Nerva.Rpc
             result = null;
 
             var jr = param == null ?
-                new JsonRequest {
+                new RequestData {
                     MethodName = rpc
                 } :
-                new JsonRequest<T_Req> {
+                new RequestData<T_Req> {
                     MethodName = rpc,
                     Params = param
                 };
 
-            if (!new Requester(d).MakeJsonRpcRequest(jr, out result))
+            if (!new Requester(port).MakeJsonRpcRequest(jr, out result))
             {
-                Log.Instance.Write(Log_Severity.Error, "Could not complete JSON RPC call: {0}", jr.MethodName);
+                if (Configuration.LogErrors)
+                    Log.Instance.Write(Log_Severity.Error, "Could not complete JSON RPC call: {0}", jr.MethodName);
+
                 return false;
             }
 
-            var error = JObject.Parse(result)["error"];
+            var e = JObject.Parse(result)["error"];
 
-            if (error != null)
+            if (e != null)
             {
-                e.Code = error["code"].Value<int>();
-                e.Message = error["message"].Value<string>();
+                error.Code = e["code"].Value<int>();
+                error.Message = e["message"].Value<string>();
 
-                Log.Instance.Write(Log_Severity.Error, "JSON RPC call returned error {0}: {1}", e.Code, e.Message);
+                if (Configuration.LogErrors)
+                    Log.Instance.Write(Log_Severity.Error, "JSON RPC call returned error {0}: {1}", error.Code, error.Message);
                 
                 return false;
             }
@@ -118,5 +123,37 @@ namespace Nerva.Rpc
     {
         public int Code { get; set; } = int.MaxValue;
         public string Message { get; set; } = null;
+    }
+
+    [JsonObject]
+    public class RequestData
+    { 
+        private const string RPC_VERSION = "2.0";
+        private const string ID = "0";
+
+        [JsonProperty("jsonrpc")]
+        public string RpcVersion => RPC_VERSION;
+
+        [JsonProperty("id")]
+        public string RpcId => ID;
+        
+        [JsonProperty("method")]
+        public string MethodName { get; set; }
+
+        public string Encode() => JsonConvert.SerializeObject(this);
+    }
+
+    [JsonObject]
+    public class RequestData<T> : RequestData
+    {  
+        [JsonProperty("params")]
+        public T Params { get; set; }
+    }
+
+    [JsonObject]
+    public class ResponseData<T>
+    {
+        [JsonProperty("result")]
+        public T Result { get; set; }
     }
 }

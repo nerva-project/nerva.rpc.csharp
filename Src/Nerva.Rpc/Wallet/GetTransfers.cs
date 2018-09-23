@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace Nerva.Rpc.Wallet
@@ -14,7 +13,7 @@ namespace Nerva.Rpc.Wallet
         {
             string json = null;
             bool r = JsonRpcRequest("get_transfers", rpcData, out json);
-            result = r ? JsonConvert.DeserializeObject<JsonResponse<GetTransfersResponseData>>(json).Result : null;
+            result = r ? JsonConvert.DeserializeObject<ResponseData<GetTransfersResponseData>>(json).Result : null;
             return r;
         }
     }

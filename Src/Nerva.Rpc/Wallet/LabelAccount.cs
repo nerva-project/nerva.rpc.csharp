@@ -12,7 +12,7 @@ namespace Nerva.Rpc.Wallet
         {
             string json = null;
             bool r = JsonRpcRequest("create_account", rpcData, out json);
-            result = r ? JsonConvert.DeserializeObject<JsonResponse<string>>(json).Result : null;
+            result = r ? JsonConvert.DeserializeObject<ResponseData<string>>(json).Result : null;
             return r;
         }
     }

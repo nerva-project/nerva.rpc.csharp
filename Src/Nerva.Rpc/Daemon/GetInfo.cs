@@ -13,7 +13,7 @@ namespace Nerva.Rpc.Daemon
         {
             string json = null;
             bool r = JsonRpcRequest("get_info", null, out json);
-            result = r ? JsonConvert.DeserializeObject<JsonResponse<GetInfoResponseData>>(json).Result : null;
+            result = r ? JsonConvert.DeserializeObject<ResponseData<GetInfoResponseData>>(json).Result : null;
             return r;
         }
     }

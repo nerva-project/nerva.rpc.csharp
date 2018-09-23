@@ -6,31 +6,20 @@ using AngryWasp.Logger;
 
 namespace Nerva.Rpc
 {
-    public class RequestData
+    public class Requester
     {
-        private uint port = 0;
-        public uint Port => port;
+        private uint port;
 
-        public RequestData(uint port)
+        public Requester(uint port)
         {
             this.port = port;
         }
-    }
 
-    public class Requester
-    {
-        private RequestData rd;
-
-        public Requester(RequestData rd)
-        {
-            this.rd = rd;
-        }
-
-        public bool MakeJsonRpcRequest(JsonRequest request, out string jsonString)
+        public bool MakeJsonRpcRequest(RequestData request, out string jsonString)
         {
             try
             {
-                string url = $"http://127.0.0.1:{rd.Port}/json_rpc";
+                string url = $"http://127.0.0.1:{port}/json_rpc";
 
                 string reqData = request.Encode();
                 byte[] reqDataBytes = Encoding.ASCII.GetBytes(reqData);
@@ -54,7 +43,8 @@ namespace Nerva.Rpc
             }
             catch (Exception ex)
             {
-                Log.Instance.WriteNonFatalException(ex);
+                if (Configuration.LogErrors)
+                    Log.Instance.WriteNonFatalException(ex);
 
                 jsonString = null;
                 return false;
@@ -65,7 +55,7 @@ namespace Nerva.Rpc
         {
             try
             {
-                string url = $"http://127.0.0.1:{rd.Port}/{methodName}";
+                string url = $"http://127.0.0.1:{port}/{methodName}";
    
                 HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
                 req.Method = "POST";
@@ -91,7 +81,8 @@ namespace Nerva.Rpc
             }
             catch (Exception ex)
             {
-                Log.Instance.WriteNonFatalException(ex);
+                if (Configuration.LogErrors)
+                    Log.Instance.WriteNonFatalException(ex);
                     
                 jsonString = null;
                 return false;
@@ -116,7 +107,8 @@ namespace Nerva.Rpc
             }
             catch (Exception ex)
             {
-                Log.Instance.WriteNonFatalException(ex);
+                if (Configuration.LogErrors)
+                    Log.Instance.WriteNonFatalException(ex);
                 
                 returnString = null;
                 return false;
