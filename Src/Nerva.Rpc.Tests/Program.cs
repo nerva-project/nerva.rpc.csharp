@@ -6,6 +6,7 @@ using AngryWasp.Helpers;
 using AngryWasp.Logger;
 using Nerva.Rpc.Wallet;
 using Nerva.Rpc.Daemon;
+using System.Threading;
 
 namespace Nerva.Rpc.Tests
 {
@@ -13,18 +14,24 @@ namespace Nerva.Rpc.Tests
     {
         private static string walletName = "testnet";
         private static string password = "";
-        private static uint daemonPort = 17566;
-        private static uint walletPort = 18789;
+        private static uint daemonPort = 18566;
+        private static uint walletPort = 22525;
 
         [STAThread]
         public static void Main(string[] args)
         {
             Log.CreateInstance(true);
 
-            Test_GetBlockCount();
-            Test_GetInfo();
-            Test_StopMining();
-            Test_StartMining();
+            Process.Start("nerva-wallet-rpc", "--testnet --rpc-bind-port 22525 --daemon-address 127.0.0.1:18566 --disable-rpc-login --wallet-dir ./");
+
+            Thread.Sleep(5000);
+
+            TestWallet();
+
+            //Test_GetBlockCount();
+            //Test_GetInfo();
+            //Test_StopMining();
+            //Test_StartMining();
             //Test_StopDaemon().Wait();
             //Test_SetBans();
         }
@@ -32,8 +39,9 @@ namespace Nerva.Rpc.Tests
         public static void TestWallet()
         {
             //Commented out test methods have been run and verified
-            //Test_CreateWallet().Wait();
-            //Test_OpenWallet().Wait();
+            Test_CreateWallet();
+            Test_OpenWallet();
+            Test_MakeIntegratedAddress();
             //Test_QueryKey().Wait();
             //Test_CreateAccount().Wait();
             //Test_GetAccounts().Wait();
@@ -146,6 +154,27 @@ namespace Nerva.Rpc.Tests
             }, (RequestError e) => {
                 Log.Instance.Write(Log_Severity.Error, "Transfer Without PID: Failed");
             }, walletPort).Run();  
+        }
+
+        public static bool Test_MakeIntegratedAddress()
+        {
+            new MakeIntegratedAddress(null, (MakeIntegratedAddressResponseData result) => {
+                Log.Instance.Write("MakeIntegratedAddress: Passed, {0}", result.IntegratedAddress);
+            }, (RequestError e) => {
+                Log.Instance.Write(Log_Severity.Error, "MakeIntegratedAddress: Failed");
+                Environment.Exit(1);
+            }, walletPort).Run(); 
+
+            new MakeIntegratedAddress(new MakeIntegratedAddressRequestData {
+                PaymentId = "f9a540b30a3c82e4"
+            }, (MakeIntegratedAddressResponseData result) => {
+                Log.Instance.Write("MakeIntegratedAddress: Passed, {0}", result.IntegratedAddress);
+            }, (RequestError e) => {
+                Log.Instance.Write(Log_Severity.Error, "MakeIntegratedAddress: Failed");
+                Environment.Exit(1);
+            }, walletPort).Run();  
+
+            return true;
         }
 
         public static bool Test_Transfer_PaymentId()
