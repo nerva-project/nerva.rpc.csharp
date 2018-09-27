@@ -115,6 +115,9 @@ namespace Nerva.Rpc
 
                 string paramData = param != null ? jr.GetParamsJson() : "None";
 
+                if (Configuration.SuppressRpcCodes.Contains(error.Code))
+                    return false;
+
                 switch (Configuration.ErrorLogVerbosity)
                 {
                     case Error_Log_Verbosity.Normal:

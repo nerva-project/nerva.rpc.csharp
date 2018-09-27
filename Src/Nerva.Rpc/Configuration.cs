@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Nerva.Rpc
@@ -17,5 +18,7 @@ namespace Nerva.Rpc
     public static class Configuration
     {
         public static Error_Log_Verbosity ErrorLogVerbosity { get; set; } = Error_Log_Verbosity.None;
+
+        public static List<int> SuppressRpcCodes { get; set; } = new List<int>();
     }
 }

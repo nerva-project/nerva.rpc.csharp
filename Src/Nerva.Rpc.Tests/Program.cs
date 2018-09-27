@@ -23,6 +23,7 @@ namespace Nerva.Rpc.Tests
             Log.CreateInstance(true);
 
             Process.Start("nerva-wallet-rpc", "--testnet --rpc-bind-port 22525 --daemon-address 127.0.0.1:18566 --disable-rpc-login --wallet-dir ./");
+            CommandLineParser cmd = CommandLineParser.Parse(args);
 
             Thread.Sleep(5000);
 
