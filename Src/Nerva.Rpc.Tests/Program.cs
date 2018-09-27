@@ -15,7 +15,7 @@ namespace Nerva.Rpc.Tests
         private static string walletName = "testnet";
         private static string password = "";
         private static uint daemonPort = 18566;
-        private static uint walletPort = 22525;
+        private static uint walletPort = 22526;
 
         [STAThread]
         public static void Main(string[] args)
@@ -25,6 +25,8 @@ namespace Nerva.Rpc.Tests
             Process.Start("nerva-wallet-rpc", "--testnet --rpc-bind-port 22525 --daemon-address 127.0.0.1:18566 --disable-rpc-login --wallet-dir ./");
 
             Thread.Sleep(5000);
+
+            Configuration.ErrorLogVerbosity = Error_Log_Verbosity.Full;
 
             TestWallet();
 

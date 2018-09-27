@@ -43,8 +43,25 @@ namespace Nerva.Rpc
             }
             catch (Exception ex)
             {
-                if (Configuration.LogErrors)
-                    Log.Instance.WriteNonFatalException(ex);
+                string paramData = request.GetParamsJson();
+                if (paramData == null) 
+                    paramData = "None";
+
+                switch (Configuration.ErrorLogVerbosity)
+                {
+                    case Error_Log_Verbosity.Normal:
+                        Log.Instance.Write(Log_Severity.Error, "Could not complete JSON RPC call: {0}", request.MethodName);
+                        break;
+                    case Error_Log_Verbosity.Detailed:
+                        Log.Instance.Write(Log_Severity.Error, "Could not complete JSON RPC call: {0}", request.MethodName);
+                        Log.Instance.Write(Log_Severity.None, "JSON RPC Params: {0}", paramData);
+                        break;
+                    case Error_Log_Verbosity.Full:
+                        Log.Instance.Write(Log_Severity.Error, "Could not complete JSON RPC call: {0}", request.MethodName);
+                        Log.Instance.Write(Log_Severity.None, "JSON RPC Params: {0}", paramData);
+                        Log.Instance.WriteNonFatalException(ex);
+                        break;
+                }
 
                 jsonString = null;
                 return false;
@@ -81,9 +98,22 @@ namespace Nerva.Rpc
             }
             catch (Exception ex)
             {
-                if (Configuration.LogErrors)
-                    Log.Instance.WriteNonFatalException(ex);
-                    
+                switch (Configuration.ErrorLogVerbosity)
+                {
+                    case Error_Log_Verbosity.Normal:
+                        Log.Instance.Write(Log_Severity.Error, "Could not complete JSON RPC call: {0}", methodName);
+                        break;
+                    case Error_Log_Verbosity.Detailed:
+                        Log.Instance.Write(Log_Severity.Error, "Could not complete JSON RPC call: {0}", methodName);
+                        Log.Instance.Write(Log_Severity.None, "RPC Params: {0}", postDataString);
+                        break;
+                    case Error_Log_Verbosity.Full:
+                        Log.Instance.Write(Log_Severity.Error, "Could not complete JSON RPC call: {0}", methodName);
+                        Log.Instance.Write(Log_Severity.None, "RPC Params: {0}", postDataString);
+                        Log.Instance.WriteNonFatalException(ex);
+                        break;
+                }
+
                 jsonString = null;
                 return false;
             }
@@ -107,8 +137,17 @@ namespace Nerva.Rpc
             }
             catch (Exception ex)
             {
-                if (Configuration.LogErrors)
-                    Log.Instance.WriteNonFatalException(ex);
+               switch (Configuration.ErrorLogVerbosity)
+                {
+                    case Error_Log_Verbosity.Normal:
+                    case Error_Log_Verbosity.Detailed:
+                        Log.Instance.Write(Log_Severity.Error, "Could not complete HTTP call: {0}", url);
+                        break;
+                    case Error_Log_Verbosity.Full:
+                        Log.Instance.Write(Log_Severity.Error, "Could not complete HTTP call: {0}", url);
+                        Log.Instance.WriteNonFatalException(ex);
+                        break;
+                }
                 
                 returnString = null;
                 return false;
