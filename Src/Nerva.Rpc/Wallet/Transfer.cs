@@ -46,9 +46,6 @@ namespace Nerva.Rpc.Wallet
 
         [JsonProperty("priority")]
         public uint Priority { get; set; } = (uint)Send_Priority.Default;
-
-        [JsonProperty("unlock_time")]
-        public ulong UnlockTime => 20;
     }
 
     [JsonObject]
