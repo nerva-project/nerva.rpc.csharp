@@ -22,41 +22,31 @@ namespace Nerva.Rpc.Tests
         {
             Log.CreateInstance(true);
 
-            Process.Start("nerva-wallet-rpc", "--testnet --rpc-bind-port 22525 --daemon-address 127.0.0.1:18566 --disable-rpc-login --wallet-dir ./");
+            //Process.Start("nerva-wallet-rpc", "--testnet --rpc-bind-port 22525 --daemon-address 127.0.0.1:18566 --disable-rpc-login --wallet-dir ./");
             CommandLineParser cmd = CommandLineParser.Parse(args);
 
-            Thread.Sleep(5000);
-
             Configuration.ErrorLogVerbosity = Error_Log_Verbosity.Full;
+            Configuration.TraceRpcData = true;
 
-            TestWallet();
-
-            //Test_GetBlockCount();
-            //Test_GetInfo();
-            //Test_StopMining();
-            //Test_StartMining();
-            //Test_StopDaemon().Wait();
-            //Test_SetBans();
-        }
-
-        public static void TestWallet()
-        {
-            //Commented out test methods have been run and verified
-            Test_CreateWallet();
-            Test_OpenWallet();
-            Test_MakeIntegratedAddress();
-            //Test_QueryKey().Wait();
-            //Test_CreateAccount().Wait();
-            //Test_GetAccounts().Wait();
-            //Test_GetTransfers().Wait();
-            //Test_Transfer_NoPaymentId().Wait();
-            //Test_Transfer_PaymentId().Wait();
-            //Test_StopWallet().Wait();
+            Test_GetBlockTemplate();
         }
 
         public static ulong ToAtomicUnits(double i)
         {
             return (ulong)(i * 1000000000000.0d);
+        }
+
+        public static bool Test_GetBlockTemplate()
+        {
+            return new GetBlockTemplate(new GetBlockTemplateRequestData {
+                Address = "NV1r8P6THPASAQX77re6hXTMJ1ykXXvtYXFXgMv4vFAQNYo3YatUvZ8LFNRu4dPQBjTwqJbMvqoeiipywmREPHpD2AgWnmG7Q",
+                ReserveSize = 60
+            }, (GetBlockTemplateResponseData result) => {
+                Log.Instance.Write("GetBlockTemplate: Passed");
+            }, (RequestError e) => {
+                Log.Instance.Write(Log_Severity.Error, "GetBlockTemplate: Failed");
+                Environment.Exit(1);
+            }, daemonPort).Run();  
         }
 
         public static bool Test_CreateWallet()

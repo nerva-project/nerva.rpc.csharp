@@ -8,7 +8,7 @@
             "program": "${workspaceRoot}/Bin/Debug/Nerva.Rpc.Tests.exe",
             "cwd": "${workspaceRoot}/Bin",
             "preLaunchTask": "build-debug",
-            "args":[ ]
+            "args":[]
         },
         {
             "name": "Test",
