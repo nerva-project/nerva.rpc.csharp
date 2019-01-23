@@ -52,7 +52,14 @@ namespace Nerva.Rpc.Tests
             string w = StringHelper.GenerateRandomHexString(4, true);
             string p = StringHelper.GenerateRandomHexString(4, true);
 
-            Test_RestoreWalletFromKeys(w, p);
+            Test_CreateWallet(w, p);
+
+            //Test_RestoreWalletFromKeys(w, p);
+
+            //w = StringHelper.GenerateRandomHexString(4, true);
+            // = StringHelper.GenerateRandomHexString(4, true);
+
+            //Test_RestoreWalletFromSeed(w, p);
         }
 
         public static ulong ToAtomicUnits(double i)
@@ -114,7 +121,7 @@ namespace Nerva.Rpc.Tests
             return new CreateWallet(new CreateWalletRequestData {
                 FileName = wallet_file,
                 Password = wallet_pass
-            }, (string result) => {
+            }, (CreateWalletResponseData result) => {
                 Log.Instance.Write("CreateWallet: Passed");
             }, (RequestError e) => {
                 Log.Instance.Write(Log_Severity.Error, "CreateWallet: Failed");

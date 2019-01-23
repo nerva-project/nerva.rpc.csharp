@@ -3,12 +3,18 @@ using Newtonsoft.Json;
 
 namespace Nerva.Rpc.Wallet
 {
-    public class CreateWallet : Request<CreateWalletRequestData, string>
+    public class CreateWallet : Request<CreateWalletRequestData, CreateWalletResponseData>
     {
-        public CreateWallet(CreateWalletRequestData rpcData, Action<string> completeAction, Action<RequestError> failedAction, uint port = 17566)
+        public CreateWallet(CreateWalletRequestData rpcData, Action<CreateWalletResponseData> completeAction, Action<RequestError> failedAction, uint port = 17566)
             : base (rpcData, completeAction, failedAction, port) { }
             
-        protected override bool DoRequest(out string result) => JsonRpcRequest("create_wallet", rpcData, out result);
+        protected override bool DoRequest(out CreateWalletResponseData result)
+        {
+            string json = null;
+            bool r = JsonRpcRequest("create_wallet", rpcData, out json);
+            result = r ? JsonConvert.DeserializeObject<ResponseData<CreateWalletResponseData>>(json).Result : null;
+            return r;
+        }
     }
 
     public class CreateWalletRequestData : OpenWalletRequestData
@@ -17,5 +23,14 @@ namespace Nerva.Rpc.Wallet
 
         [JsonProperty("language")]
         public string Language => LANGUAGE;
+    }
+
+    public class CreateWalletResponseData
+    {
+        [JsonProperty("seed")]
+        public string Seed { get; set; }
+
+        [JsonProperty("address")]
+        public string Address { get; set; }
     }
 }
