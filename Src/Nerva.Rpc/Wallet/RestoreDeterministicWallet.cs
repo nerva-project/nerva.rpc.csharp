@@ -3,21 +3,21 @@ using Newtonsoft.Json;
 
 namespace Nerva.Rpc.Wallet
 {
-    public class ImportWallet : Request<ImportWalletRequestData, ImportWalletResponseData>
+    public class RestoreDeterministicWallet : Request<RestoreDeterministicWalletRequestData, RestoreDeterministicWalletResponseData>
     {
-        public ImportWallet(ImportWalletRequestData rpcData, Action<ImportWalletResponseData> completeAction, Action<RequestError> failedAction, uint port = 17566)
+        public RestoreDeterministicWallet(RestoreDeterministicWalletRequestData rpcData, Action<RestoreDeterministicWalletResponseData> completeAction, Action<RequestError> failedAction, uint port = 17566)
             : base (rpcData, completeAction, failedAction, port) { }
             
-        protected override bool DoRequest(out ImportWalletResponseData result)
+        protected override bool DoRequest(out RestoreDeterministicWalletResponseData result)
         {
             string json = null;
             bool r = JsonRpcRequest("restore_deterministic_wallet", rpcData, out json);
-            result = r ? JsonConvert.DeserializeObject<ResponseData<ImportWalletResponseData>>(json).Result : null;
+            result = r ? JsonConvert.DeserializeObject<ResponseData<RestoreDeterministicWalletResponseData>>(json).Result : null;
             return r;
         }
     }
 
-    public class ImportWalletRequestData : CreateWalletRequestData
+    public class RestoreDeterministicWalletRequestData : CreateWalletRequestData
     {
         [JsonProperty("restore_height")]
         public ulong RestoreHeight { get; set; } = 0;
@@ -29,7 +29,7 @@ namespace Nerva.Rpc.Wallet
         public string SeedOffset { get; set; } = "";
     }
 
-    public class ImportWalletResponseData
+    public class RestoreDeterministicWalletResponseData
     {
         [JsonProperty("address")]
         public string Address { get; set; }

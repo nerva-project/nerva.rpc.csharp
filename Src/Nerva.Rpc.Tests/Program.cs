@@ -12,9 +12,16 @@ namespace Nerva.Rpc.Tests
 {
     public class Program
     {
-        //These tests use the following wallets.
+        // These tests use the following wallets.
         // NV2kiVrAgSjY7pZUcE6u9NFFg4urXDAnBBoJhC2b1xBpBfVx19rSLFBKbPq8ipeAEjau8Vm6mXRtN2AKugV7PG6v1Nw2V6m75
         // getting wiring physics richly maps upload sedan pool fifteen dying vampire voted recipe owed dice peeled ionic ugly foamy vary february ability afield ambush upload
+        // viewkey
+        // secret: a94338299a19a85c4fa14e9ae7d551ef492e9ae3c21625e2531e1cdeee664c01
+        // public: 2af1aa5af95a6f2905cc13049378caaae57388a4ee9306f09f308265e7832c0a
+        // spendkey
+        // secret: f5dc8cae87b5b863eca14e9f187e41064ff9f790ba7b6a77f175d05b8e5cd505
+        // public: aceec4bd0008ba0a366287754e6d55368c20f613b560408f27542c4654af3fc1
+
 
         // NV2K9m13tbr3NhSubtR3tD3kzWhEbqrkuZi3ts9XxZvqgeMCG1MkQQgF4cpiuEWdEeWiZhgzGdFKPcSNByCLaass2h6ftye3Q
         // because bicycle omission visited austere seeded runway upright stylishly often abducts pipeline toolbox abort segments vacation cider subtly ribbon gauze tanks huts eight factual abducts
@@ -22,12 +29,12 @@ namespace Nerva.Rpc.Tests
         //Don't be a dingus and try to use these wallets yourself
         private const string ADDRESS_A = "NV2kiVrAgSjY7pZUcE6u9NFFg4urXDAnBBoJhC2b1xBpBfVx19rSLFBKbPq8ipeAEjau8Vm6mXRtN2AKugV7PG6v1Nw2V6m75";
         private const string SEED_A = "getting wiring physics richly maps upload sedan pool fifteen dying vampire voted recipe owed dice peeled ionic ugly foamy vary february ability afield ambush upload";
+        private const string PVK_A = "a94338299a19a85c4fa14e9ae7d551ef492e9ae3c21625e2531e1cdeee664c01";
+        private const string PSK_A = "f5dc8cae87b5b863eca14e9f187e41064ff9f790ba7b6a77f175d05b8e5cd505";
 
         private const string ADDRESS_B = "NV2K9m13tbr3NhSubtR3tD3kzWhEbqrkuZi3ts9XxZvqgeMCG1MkQQgF4cpiuEWdEeWiZhgzGdFKPcSNByCLaass2h6ftye3Q";
         private const string SEED_B = "because bicycle omission visited austere seeded runway upright stylishly often abducts pipeline toolbox abort segments vacation cider subtly ribbon gauze tanks huts eight factual abducts";
 
-        private static string walletName = "testnet";
-        private static string password = "";
         private static uint daemonPort = 18566;
         private static uint walletPort = 22525;
 
@@ -36,14 +43,17 @@ namespace Nerva.Rpc.Tests
         {
             Log.CreateInstance(true);
 
-            Process.Start("nerva-wallet-rpc", "--testnet --rpc-bind-port 22525 --daemon-address 127.0.0.1:18566 --disable-rpc-login --wallet-dir ./");
+            //Process.Start("nerva-wallet-rpc", "--testnet --rpc-bind-port 22525 --daemon-address 127.0.0.1:18566 --disable-rpc-login --wallet-dir ./");
             CommandLineParser cmd = CommandLineParser.Parse(args);
 
             Configuration.ErrorLogVerbosity = Error_Log_Verbosity.Full;
             Configuration.TraceRpcData = true;
 
-            //Test_GetBlockTemplate();
-            Test_ImportWallet();
+            string w = StringHelper.GenerateRandomHexString(4, true);
+            string p = StringHelper.GenerateRandomHexString(4, true);
+
+            Test_RestoreNonDeterministicWallet(w, p);
+            Test_OpenWallet(w, p);
         }
 
         public static ulong ToAtomicUnits(double i)
@@ -51,18 +61,38 @@ namespace Nerva.Rpc.Tests
             return (ulong)(i * 1000000000000.0d);
         }
 
-        public static bool Test_ImportWallet()
+        public static bool Test_RestoreDeterministicWallet(string wallet_file, string wallet_pass)
         {
-            return new ImportWallet(new ImportWalletRequestData {
+            return new RestoreDeterministicWallet(new RestoreDeterministicWalletRequestData {
                 Seed = SEED_A,
-                FileName = StringHelper.GenerateRandomHexString(4, true)
-            }, (ImportWalletResponseData result) => {
-                if (ADDRESS_A == result.Address && SEED_A == result.Seed)
-                    Log.Instance.Write("ImportWallet: Passed");
+                FileName = wallet_file,
+                Password = wallet_pass
+            }, (RestoreDeterministicWalletResponseData result) => {
+                if (ADDRESS_A == result.Address)
+                    Log.Instance.Write("RestoreDeterministicWalletWallet: Passed");
                 else
-                    Log.Instance.Write("ImportWallet: Restored Wallet address did not match");
+                    Log.Instance.Write("RestoreDeterministicWalletWallet: Restored Wallet address did not match");
             }, (RequestError e) => {
-                Log.Instance.Write(Log_Severity.Error, "ImportWallet: Failed");
+                Log.Instance.Write(Log_Severity.Error, "RestoreDeterministicWalletWallet: Failed");
+                Environment.Exit(1);
+            }, walletPort).Run(); 
+        }
+
+        public static bool Test_RestoreNonDeterministicWallet(string wallet_file, string wallet_pass)
+        {
+            return new RestoreNonDeterministicWallet(new RestoreNonDeterministicWalletRequestData {
+                ViewKey = PVK_A,
+                SpendKey = PSK_A,
+                Address = ADDRESS_A,
+                FileName = wallet_file,
+                Password = wallet_pass
+            }, (RestoreNonDeterministicWalletResponseData result) => {
+                if (ADDRESS_A == result.Address)
+                    Log.Instance.Write("RestoreNonDeterministicWalletWallet: Passed");
+                else
+                    Log.Instance.Write("RestoreNonDeterministicWalletWallet: Restored Wallet address did not match");
+            }, (RequestError e) => {
+                Log.Instance.Write(Log_Severity.Error, "RestoreNonDeterministicWalletWallet: Failed");
                 Environment.Exit(1);
             }, walletPort).Run(); 
         }
@@ -80,11 +110,11 @@ namespace Nerva.Rpc.Tests
             }, daemonPort).Run();  
         }
 
-        public static bool Test_CreateWallet()
+        public static bool Test_CreateWallet(string wallet_file, string wallet_pass)
         {
             return new CreateWallet(new CreateWalletRequestData {
-                FileName = walletName,
-                Password = password
+                FileName = wallet_file,
+                Password = wallet_pass
             }, (string result) => {
                 Log.Instance.Write("CreateWallet: Passed");
             }, (RequestError e) => {
@@ -93,11 +123,11 @@ namespace Nerva.Rpc.Tests
             }, walletPort).Run();  
         }
 
-        public static bool Test_OpenWallet()
+        public static bool Test_OpenWallet(string wallet_file, string wallet_pass)
         {
             return new OpenWallet(new OpenWalletRequestData {
-                FileName = walletName,
-                Password = password
+                FileName = wallet_file,
+                Password = wallet_pass
             }, (string result) => {
                 Log.Instance.Write("OpenWallet: Passed");
             }, (RequestError e) => {
