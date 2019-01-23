@@ -17,7 +17,7 @@ namespace Nerva.Rpc.Wallet
         }
     }
 
-    public class RestoreNonDeterministicWalletRequestData : OpenWalletRequestData
+    public class RestoreNonDeterministicWalletRequestData : CreateWalletRequestData
     {
         [JsonProperty("restore_height")]
         public ulong RestoreHeight { get; set; } = 0;

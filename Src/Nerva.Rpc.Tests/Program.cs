@@ -53,7 +53,6 @@ namespace Nerva.Rpc.Tests
             string p = StringHelper.GenerateRandomHexString(4, true);
 
             Test_RestoreNonDeterministicWallet(w, p);
-            Test_OpenWallet(w, p);
         }
 
         public static ulong ToAtomicUnits(double i)
@@ -66,7 +65,7 @@ namespace Nerva.Rpc.Tests
             return new RestoreDeterministicWallet(new RestoreDeterministicWalletRequestData {
                 Seed = SEED_A,
                 FileName = wallet_file,
-                Password = wallet_pass
+                Password = wallet_pass,
             }, (RestoreDeterministicWalletResponseData result) => {
                 if (ADDRESS_A == result.Address)
                     Log.Instance.Write("RestoreDeterministicWalletWallet: Passed");
