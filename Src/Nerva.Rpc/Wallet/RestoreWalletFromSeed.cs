@@ -3,21 +3,21 @@ using Newtonsoft.Json;
 
 namespace Nerva.Rpc.Wallet
 {
-    public class RestoreDeterministicWallet : Request<RestoreDeterministicWalletRequestData, RestoreDeterministicWalletResponseData>
+    public class RestoreWalletFromSeed : Request<RestoreWalletFromSeedRequestData, RestoreWalletFromSeedResponseData>
     {
-        public RestoreDeterministicWallet(RestoreDeterministicWalletRequestData rpcData, Action<RestoreDeterministicWalletResponseData> completeAction, Action<RequestError> failedAction, uint port = 17566)
+        public RestoreWalletFromSeed(RestoreWalletFromSeedRequestData rpcData, Action<RestoreWalletFromSeedResponseData> completeAction, Action<RequestError> failedAction, uint port = 17566)
             : base (rpcData, completeAction, failedAction, port) { }
             
-        protected override bool DoRequest(out RestoreDeterministicWalletResponseData result)
+        protected override bool DoRequest(out RestoreWalletFromSeedResponseData result)
         {
             string json = null;
-            bool r = JsonRpcRequest("restore_deterministic_wallet", rpcData, out json);
-            result = r ? JsonConvert.DeserializeObject<ResponseData<RestoreDeterministicWalletResponseData>>(json).Result : null;
+            bool r = JsonRpcRequest("restore_wallet_from_seed", rpcData, out json);
+            result = r ? JsonConvert.DeserializeObject<ResponseData<RestoreWalletFromSeedResponseData>>(json).Result : null;
             return r;
         }
     }
 
-    public class RestoreDeterministicWalletRequestData : CreateWalletRequestData
+    public class RestoreWalletFromSeedRequestData : CreateWalletRequestData
     {
         [JsonProperty("restore_height")]
         public ulong RestoreHeight { get; set; } = 0;
@@ -29,7 +29,7 @@ namespace Nerva.Rpc.Wallet
         public string SeedOffset { get; set; } = "";
     }
 
-    public class RestoreDeterministicWalletResponseData
+    public class RestoreWalletFromSeedResponseData
     {
         [JsonProperty("address")]
         public string Address { get; set; }

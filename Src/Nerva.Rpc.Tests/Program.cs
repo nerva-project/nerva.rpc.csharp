@@ -52,7 +52,7 @@ namespace Nerva.Rpc.Tests
             string w = StringHelper.GenerateRandomHexString(4, true);
             string p = StringHelper.GenerateRandomHexString(4, true);
 
-            Test_RestoreNonDeterministicWallet(w, p);
+            Test_RestoreWalletFromKeys(w, p);
         }
 
         public static ulong ToAtomicUnits(double i)
@@ -60,38 +60,38 @@ namespace Nerva.Rpc.Tests
             return (ulong)(i * 1000000000000.0d);
         }
 
-        public static bool Test_RestoreDeterministicWallet(string wallet_file, string wallet_pass)
+        public static bool Test_RestoreWalletFromSeed(string wallet_file, string wallet_pass)
         {
-            return new RestoreDeterministicWallet(new RestoreDeterministicWalletRequestData {
+            return new RestoreWalletFromSeed(new RestoreWalletFromSeedRequestData {
                 Seed = SEED_A,
                 FileName = wallet_file,
                 Password = wallet_pass,
-            }, (RestoreDeterministicWalletResponseData result) => {
+            }, (RestoreWalletFromSeedResponseData result) => {
                 if (ADDRESS_A == result.Address)
-                    Log.Instance.Write("RestoreDeterministicWalletWallet: Passed");
+                    Log.Instance.Write("RestoreWalletFromSeed: Passed");
                 else
-                    Log.Instance.Write("RestoreDeterministicWalletWallet: Restored Wallet address did not match");
+                    Log.Instance.Write("RestoreWalletFromSeed: Failed. Mismatch");
             }, (RequestError e) => {
-                Log.Instance.Write(Log_Severity.Error, "RestoreDeterministicWalletWallet: Failed");
+                Log.Instance.Write(Log_Severity.Error, "RestoreWalletFromSeed: Failed");
                 Environment.Exit(1);
             }, walletPort).Run(); 
         }
 
-        public static bool Test_RestoreNonDeterministicWallet(string wallet_file, string wallet_pass)
+        public static bool Test_RestoreWalletFromKeys(string wallet_file, string wallet_pass)
         {
-            return new RestoreNonDeterministicWallet(new RestoreNonDeterministicWalletRequestData {
+            return new RestoreWalletFromKeys(new RestoreWalletFromKeysRequestData {
                 ViewKey = PVK_A,
                 SpendKey = PSK_A,
                 Address = ADDRESS_A,
                 FileName = wallet_file,
                 Password = wallet_pass
-            }, (RestoreNonDeterministicWalletResponseData result) => {
+            }, (RestoreWalletFromKeysResponseData result) => {
                 if (ADDRESS_A == result.Address)
-                    Log.Instance.Write("RestoreNonDeterministicWalletWallet: Passed");
+                    Log.Instance.Write("RestoreWalletFromKeys: Passed");
                 else
-                    Log.Instance.Write("RestoreNonDeterministicWalletWallet: Restored Wallet address did not match");
+                    Log.Instance.Write("RestoreWalletFromKeys: Failed. Mismatch");
             }, (RequestError e) => {
-                Log.Instance.Write(Log_Severity.Error, "RestoreNonDeterministicWalletWallet: Failed");
+                Log.Instance.Write(Log_Severity.Error, "RestoreWalletFromKeys: Failed");
                 Environment.Exit(1);
             }, walletPort).Run(); 
         }
