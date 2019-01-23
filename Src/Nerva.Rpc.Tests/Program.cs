@@ -12,23 +12,38 @@ namespace Nerva.Rpc.Tests
 {
     public class Program
     {
+        //These tests use the following wallets.
+        // NV2kiVrAgSjY7pZUcE6u9NFFg4urXDAnBBoJhC2b1xBpBfVx19rSLFBKbPq8ipeAEjau8Vm6mXRtN2AKugV7PG6v1Nw2V6m75
+        // getting wiring physics richly maps upload sedan pool fifteen dying vampire voted recipe owed dice peeled ionic ugly foamy vary february ability afield ambush upload
+
+        // NV2K9m13tbr3NhSubtR3tD3kzWhEbqrkuZi3ts9XxZvqgeMCG1MkQQgF4cpiuEWdEeWiZhgzGdFKPcSNByCLaass2h6ftye3Q
+        // because bicycle omission visited austere seeded runway upright stylishly often abducts pipeline toolbox abort segments vacation cider subtly ribbon gauze tanks huts eight factual abducts
+
+        //Don't be a dingus and try to use these wallets yourself
+        private const string ADDRESS_A = "NV2kiVrAgSjY7pZUcE6u9NFFg4urXDAnBBoJhC2b1xBpBfVx19rSLFBKbPq8ipeAEjau8Vm6mXRtN2AKugV7PG6v1Nw2V6m75";
+        private const string SEED_A = "getting wiring physics richly maps upload sedan pool fifteen dying vampire voted recipe owed dice peeled ionic ugly foamy vary february ability afield ambush upload";
+
+        private const string ADDRESS_B = "NV2K9m13tbr3NhSubtR3tD3kzWhEbqrkuZi3ts9XxZvqgeMCG1MkQQgF4cpiuEWdEeWiZhgzGdFKPcSNByCLaass2h6ftye3Q";
+        private const string SEED_B = "because bicycle omission visited austere seeded runway upright stylishly often abducts pipeline toolbox abort segments vacation cider subtly ribbon gauze tanks huts eight factual abducts";
+
         private static string walletName = "testnet";
         private static string password = "";
         private static uint daemonPort = 18566;
-        private static uint walletPort = 22526;
+        private static uint walletPort = 22525;
 
         [STAThread]
         public static void Main(string[] args)
         {
             Log.CreateInstance(true);
 
-            //Process.Start("nerva-wallet-rpc", "--testnet --rpc-bind-port 22525 --daemon-address 127.0.0.1:18566 --disable-rpc-login --wallet-dir ./");
+            Process.Start("nerva-wallet-rpc", "--testnet --rpc-bind-port 22525 --daemon-address 127.0.0.1:18566 --disable-rpc-login --wallet-dir ./");
             CommandLineParser cmd = CommandLineParser.Parse(args);
 
             Configuration.ErrorLogVerbosity = Error_Log_Verbosity.Full;
             Configuration.TraceRpcData = true;
 
-            Test_GetBlockTemplate();
+            //Test_GetBlockTemplate();
+            Test_ImportWallet();
         }
 
         public static ulong ToAtomicUnits(double i)
@@ -36,10 +51,26 @@ namespace Nerva.Rpc.Tests
             return (ulong)(i * 1000000000000.0d);
         }
 
+        public static bool Test_ImportWallet()
+        {
+            return new ImportWallet(new ImportWalletRequestData {
+                Seed = SEED_A,
+                FileName = StringHelper.GenerateRandomHexString(4, true)
+            }, (ImportWalletResponseData result) => {
+                if (ADDRESS_A == result.Address && SEED_A == result.Seed)
+                    Log.Instance.Write("ImportWallet: Passed");
+                else
+                    Log.Instance.Write("ImportWallet: Restored Wallet address did not match");
+            }, (RequestError e) => {
+                Log.Instance.Write(Log_Severity.Error, "ImportWallet: Failed");
+                Environment.Exit(1);
+            }, walletPort).Run(); 
+        }
+
         public static bool Test_GetBlockTemplate()
         {
             return new GetBlockTemplate(new GetBlockTemplateRequestData {
-                Address = "NV1r8P6THPASAQX77re6hXTMJ1ykXXvtYXFXgMv4vFAQNYo3YatUvZ8LFNRu4dPQBjTwqJbMvqoeiipywmREPHpD2AgWnmG7Q",
+                Address = ADDRESS_A,
                 ReserveSize = 60
             }, (GetBlockTemplateResponseData result) => {
                 Log.Instance.Write("GetBlockTemplate: Passed");
@@ -135,11 +166,11 @@ namespace Nerva.Rpc.Tests
                 Destinations = new List<TransferDestination>{
                     new TransferDestination{
                         Amount = ToAtomicUnits(0.1),
-                        Address = "NV3EMJj8P3n6oddSWqRPAd9W1zJGaXSQCG4Xec6zv5vehgJfGzCoa4bSimxwvT3yXEZ9NeerdLcwZE6edEHkyv981ciN2fKQG"
+                        Address = ADDRESS_A
                     },
                     new TransferDestination{
                         Amount = ToAtomicUnits(0.1),
-                        Address = "NV3Nb8bAtKKHX723yEaTxWR6Qvy2UWS28SAmfZHk2ohRNCrw37x7HZH3ubj3P1dz9mD21JP3FUgTXiy3s7gvJob21R3q7TbV4"
+                        Address = ADDRESS_B
                     }
                 }
             }, (TransferResponseData result) => {
@@ -176,11 +207,11 @@ namespace Nerva.Rpc.Tests
                 Destinations = new List<TransferDestination>{
                     new TransferDestination{
                         Amount = ToAtomicUnits(0.1),
-                        Address = "NV3EMJj8P3n6oddSWqRPAd9W1zJGaXSQCG4Xec6zv5vehgJfGzCoa4bSimxwvT3yXEZ9NeerdLcwZE6edEHkyv981ciN2fKQG",
+                        Address = ADDRESS_A,
                     },
                     new TransferDestination{
                         Amount = ToAtomicUnits(0.1),
-                        Address = "NV3Nb8bAtKKHX723yEaTxWR6Qvy2UWS28SAmfZHk2ohRNCrw37x7HZH3ubj3P1dz9mD21JP3FUgTXiy3s7gvJob21R3q7TbV4"
+                        Address = ADDRESS_B
                     }
                 },
                 PaymentId = StringHelper.GenerateRandomHexString(64)
@@ -224,8 +255,8 @@ namespace Nerva.Rpc.Tests
         public static bool Test_StartMining()
         {
             return new StartMining(new StartMiningRequestData {
-                MinerAddress = "NV1r8P6THPASAQX77re6hXTMJ1ykXXvtYXFXgMv4vFAQNYo3YatUvZ8LFNRu4dPQBjTwqJbMvqoeiipywmREPHpD2AgWnmG7Q",
-                MiningThreads = 8
+                MinerAddress = ADDRESS_A,
+                MiningThreads = 2
             }, (string result) => {
                 Log.Instance.Write("StartMining: Passed");
             }, (RequestError e) => {
