@@ -53,6 +53,8 @@ namespace Nerva.Rpc.Tests
             string p = StringHelper.GenerateRandomHexString(4, true);
 
             Test_CreateWallet(w, p);
+            Test_OpenWallet(w, p);
+            Test_CloseWallet();
 
             //Test_RestoreWalletFromKeys(w, p);
 
@@ -138,6 +140,16 @@ namespace Nerva.Rpc.Tests
                 Log.Instance.Write("OpenWallet: Passed");
             }, (RequestError e) => {
                 Log.Instance.Write(Log_Severity.Error, "OpenWallet: Failed");
+                Environment.Exit(1);
+            }, walletPort).Run();  
+        }
+
+        public static bool Test_CloseWallet()
+        {
+            return new CloseWallet((string result) => {
+                Log.Instance.Write("CloseWallet: Passed");
+            }, (RequestError e) => {
+                Log.Instance.Write(Log_Severity.Error, "CloseWallet: Failed");
                 Environment.Exit(1);
             }, walletPort).Run();  
         }
