@@ -52,16 +52,10 @@ namespace Nerva.Rpc.Tests
             string w = StringHelper.GenerateRandomHexString(4, true);
             string p = StringHelper.GenerateRandomHexString(4, true);
 
-            Test_CreateWallet(w, p);
+            Test_RestoreWalletFromKeys(w, p);
             Test_OpenWallet(w, p);
-            Test_CloseWallet();
-
-            //Test_RestoreWalletFromKeys(w, p);
-
-            //w = StringHelper.GenerateRandomHexString(4, true);
-            // = StringHelper.GenerateRandomHexString(4, true);
-
-            //Test_RestoreWalletFromSeed(w, p);
+            Test_GetAccounts();
+            Test_GetTransfers();
         }
 
         public static ulong ToAtomicUnits(double i)
@@ -167,7 +161,7 @@ namespace Nerva.Rpc.Tests
         public static bool Test_GetAccounts()
         {
             return new GetAccounts((GetAccountsResponseData result) => {
-                Log.Instance.Write("GetAccounts: Passed, {0} XNV", result.TotalBalance);
+                Log.Instance.Write($"GetAccounts: Passed, {result.TotalBalance} XNV");
             }, (RequestError e) => {
                 Log.Instance.Write(Log_Severity.Error, "GetAccounts: Failed");
                 Environment.Exit(1);
@@ -179,7 +173,7 @@ namespace Nerva.Rpc.Tests
             return new GetTransfers(new GetTransfersRequestData {
                 AccountIndex = 0
             }, (GetTransfersResponseData result) => {
-                Log.Instance.Write("GetTransfers: Passed, {0}/{1} (in/out)", result.Incoming.Count, result.Outgoing.Count);
+                Log.Instance.Write($"GetTransfers: Passed, {result.Incoming.Count}/{result.Outgoing.Count} (in/out)");
             }, (RequestError e) => {
                 Log.Instance.Write(Log_Severity.Error, "GetTransfers: Failed");
                 Environment.Exit(1);
@@ -191,7 +185,7 @@ namespace Nerva.Rpc.Tests
             return new QueryKey(new QueryKeyRequestData {
                 KeyType = Key_Type.All_Keys.ToString().ToLower()
             }, (QueryKeyResponseData result) => {
-                Log.Instance.Write("QueryKey: Passed, {0}", result.PublicViewKey);
+                Log.Instance.Write($"QueryKey: Passed, {result.PublicViewKey}");
             }, (RequestError e) => {
                 Log.Instance.Write(Log_Severity.Error, "QueryKery: Failed");
             }, walletPort).Run();  
@@ -222,7 +216,7 @@ namespace Nerva.Rpc.Tests
                     }
                 }
             }, (TransferResponseData result) => {
-                Log.Instance.Write("Transfer Without PID: Passed, {0} XNV", result.Amount);
+                Log.Instance.Write($"Transfer Without PID: Passed, {result.Amount} XNV");
             }, (RequestError e) => {
                 Log.Instance.Write(Log_Severity.Error, "Transfer Without PID: Failed");
             }, walletPort).Run();  
@@ -231,7 +225,7 @@ namespace Nerva.Rpc.Tests
         public static bool Test_MakeIntegratedAddress()
         {
             new MakeIntegratedAddress(null, (MakeIntegratedAddressResponseData result) => {
-                Log.Instance.Write("MakeIntegratedAddress: Passed, {0}", result.IntegratedAddress);
+                Log.Instance.Write($"MakeIntegratedAddress: Passed, {result.IntegratedAddress}");
             }, (RequestError e) => {
                 Log.Instance.Write(Log_Severity.Error, "MakeIntegratedAddress: Failed");
                 Environment.Exit(1);
@@ -240,7 +234,7 @@ namespace Nerva.Rpc.Tests
             new MakeIntegratedAddress(new MakeIntegratedAddressRequestData {
                 PaymentId = "f9a540b30a3c82e4"
             }, (MakeIntegratedAddressResponseData result) => {
-                Log.Instance.Write("MakeIntegratedAddress: Passed, {0}", result.IntegratedAddress);
+                Log.Instance.Write($"MakeIntegratedAddress: Passed, {result.IntegratedAddress}");
             }, (RequestError e) => {
                 Log.Instance.Write(Log_Severity.Error, "MakeIntegratedAddress: Failed");
                 Environment.Exit(1);
@@ -264,7 +258,7 @@ namespace Nerva.Rpc.Tests
                 },
                 PaymentId = StringHelper.GenerateRandomHexString(64)
             }, (TransferResponseData result) => {
-                Log.Instance.Write("Transfer: Passed, {0} XNV", result.Amount);
+                Log.Instance.Write($"Transfer: Passed, {result.Amount} XNV");
             }, (RequestError e) => {
                 Log.Instance.Write(Log_Severity.Error, "Transfer: Failed");
             }, walletPort).Run();  
@@ -273,7 +267,7 @@ namespace Nerva.Rpc.Tests
         public static bool Test_GetBlockCount()
         {
             return new GetBlockCount((uint result) => {
-                Log.Instance.Write("GetBlockCount: Passed, {0}", result);
+                Log.Instance.Write($"GetBlockCount: Passed, {result}");
             }, (RequestError e) => {
                 Log.Instance.Write(Log_Severity.Error, "GetBlockCount: Failed");
                 Environment.Exit(1);
@@ -283,7 +277,7 @@ namespace Nerva.Rpc.Tests
         public static bool Test_GetInfo()
         {
             return new GetInfo((GetInfoResponseData result) => {
-                Log.Instance.Write("GetInfo: Passed, {0}", result.Version);
+                Log.Instance.Write($"GetInfo: Passed, {result.Version}");
             }, (RequestError e) => {
                 Log.Instance.Write(Log_Severity.Error, "GetInfo: Failed");
                 Environment.Exit(1);
@@ -293,7 +287,7 @@ namespace Nerva.Rpc.Tests
         public static bool Test_GetConnections()
         {
             return new GetConnections((List<GetConnectionsResponseData> result) => {
-                Log.Instance.Write("GetConnections: Passed, {0} connections", result.Count);
+                Log.Instance.Write($"GetConnections: Passed, {result.Count} connections");
             }, (RequestError e) => {
                 Log.Instance.Write(Log_Severity.Error, "GetConnections: Failed");
                 Environment.Exit(1);

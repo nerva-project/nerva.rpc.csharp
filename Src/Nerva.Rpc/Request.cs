@@ -67,11 +67,11 @@ namespace Nerva.Rpc
                 switch (Configuration.ErrorLogVerbosity)
                 {
                     case Error_Log_Verbosity.Detailed:
-                        Log.Instance.Write(Log_Severity.None, "RPC Params: {0}", postData);
+                        Log.Instance.Write(Log_Severity.None, $"RPC Params: {postData}");
                         break;
                     case Error_Log_Verbosity.Full:
-                        Log.Instance.Write(Log_Severity.None, "RPC Params: {0}", postData);
-                        Log.Instance.Write(Log_Severity.None, "RPC Response: {0}", string.IsNullOrEmpty(result) ? "None" : result);
+                        Log.Instance.Write(Log_Severity.None, $"RPC Params: {postData}");
+                        Log.Instance.Write(Log_Severity.None, $"RPC Response: {(string.IsNullOrEmpty(result) ? "None" : result)}");
                         break;
                 }
 
@@ -83,22 +83,22 @@ namespace Nerva.Rpc
                 switch (Configuration.ErrorLogVerbosity)
                 {
                     case Error_Log_Verbosity.Normal:
-                        Log.Instance.Write(Log_Severity.Error, "RPC call returned error {0}: {1}", error.Code, error.Message);
+                        Log.Instance.Write(Log_Severity.Error, $"RPC call returned error {error.Code}: {error.Message}");
                         break;
                     case Error_Log_Verbosity.Detailed:
                         if (!Configuration.TraceRpcData)
-                            Log.Instance.Write(Log_Severity.None, "RPC Params: {0}", postData);
+                            Log.Instance.Write(Log_Severity.None, $"RPC Params: {postData}");
 
-                        Log.Instance.Write(Log_Severity.Error, "RPC call returned error {0}: {1}", error.Code, error.Message);
+                        Log.Instance.Write(Log_Severity.Error, $"RPC call returned error {error.Code}: {error.Message}");
                         break;
                     case Error_Log_Verbosity.Full:
                         if (!Configuration.TraceRpcData)
                         {
-                            Log.Instance.Write(Log_Severity.None, "RPC Params: {0}", postData);
-                            Log.Instance.Write(Log_Severity.None, "RPC Response: {0}", string.IsNullOrEmpty(result) ? "None" : result);
+                            Log.Instance.Write(Log_Severity.None, $"RPC Params: {postData}");
+                            Log.Instance.Write(Log_Severity.None, $"RPC Response: {(string.IsNullOrEmpty(result) ? "None" : result)}");
                         }
 
-                        Log.Instance.Write(Log_Severity.Error, "RPC call returned error {0}: {1}", error.Code, error.Message);
+                        Log.Instance.Write(Log_Severity.Error, $"RPC call returned error {error.Code}: {error.Message}");
                         break;
                 }
 
@@ -128,11 +128,11 @@ namespace Nerva.Rpc
                 switch (Configuration.ErrorLogVerbosity)
                 {
                     case Error_Log_Verbosity.Detailed:
-                        Log.Instance.Write(Log_Severity.None, "RPC Params: {0}", jr.GetParamsJson());
+                        Log.Instance.Write(Log_Severity.None, $"RPC Params: {jr.GetParamsJson()}");
                         break;
                     case Error_Log_Verbosity.Full:
-                        Log.Instance.Write(Log_Severity.None, "RPC Params: {0}", jr.GetParamsJson());
-                        Log.Instance.Write(Log_Severity.None, "RPC Response: {0}", string.IsNullOrEmpty(result) ? "None" : result);
+                        Log.Instance.Write(Log_Severity.None, $"RPC Params: {jr.GetParamsJson()}");
+                        Log.Instance.Write(Log_Severity.None, $"RPC Response: {(string.IsNullOrEmpty(result) ? "None" : result)}");
                         break;
                 }
 
@@ -151,22 +151,22 @@ namespace Nerva.Rpc
                 switch (Configuration.ErrorLogVerbosity)
                 {
                     case Error_Log_Verbosity.Normal:
-                        Log.Instance.Write(Log_Severity.Error, "JSON RPC call returned error {0}: {1}", error.Code, error.Message);
+                        Log.Instance.Write(Log_Severity.Error, $"JSON RPC call returned error {error.Code}: {error.Message}");
                         break;
                     case Error_Log_Verbosity.Detailed:
                         if (!Configuration.TraceRpcData)
-                            Log.Instance.Write(Log_Severity.None, "JSON RPC Params: {0}", paramData);
+                            Log.Instance.Write(Log_Severity.None, $"JSON RPC Params: {paramData}");
 
-                        Log.Instance.Write(Log_Severity.Error, "JSON RPC call returned error {0}: {1}", error.Code, error.Message);
+                        Log.Instance.Write(Log_Severity.Error, $"JSON RPC call returned error {error.Code}: {error.Message}");
                         break;
                     case Error_Log_Verbosity.Full:
                         if (!Configuration.TraceRpcData)
                         {
-                            Log.Instance.Write(Log_Severity.None, "JSON RPC Params: {0}", paramData);
-                            Log.Instance.Write(Log_Severity.None, "JSON RPC Response:\r\n{0}", string.IsNullOrEmpty(result) ? "None" : result);
+                            Log.Instance.Write(Log_Severity.None, $"JSON RPC Params: {paramData}");
+                            Log.Instance.Write(Log_Severity.None, $"JSON RPC Response:\r\n{(string.IsNullOrEmpty(result) ? "None" : result)}");
                         }
 
-                        Log.Instance.Write(Log_Severity.Error, "JSON RPC call returned error {0}: {1}", error.Code, error.Message);
+                        Log.Instance.Write(Log_Severity.Error, $"JSON RPC call returned error {error.Code}: {error.Message}");
                         break;
                 }
                 
