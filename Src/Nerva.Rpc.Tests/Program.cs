@@ -31,6 +31,9 @@ namespace Nerva.Rpc.Tests
         private const string SEED_A = "getting wiring physics richly maps upload sedan pool fifteen dying vampire voted recipe owed dice peeled ionic ugly foamy vary february ability afield ambush upload";
         private const string PVK_A = "a94338299a19a85c4fa14e9ae7d551ef492e9ae3c21625e2531e1cdeee664c01";
         private const string PSK_A = "f5dc8cae87b5b863eca14e9f187e41064ff9f790ba7b6a77f175d05b8e5cd505";
+        
+        private const string PID_A = "f9a540b30a3c82e4";
+        private const string INT_A = "NizKkMN12wH2TfHaJQAMDFKHfcXRNTCfnH6mUNoWpZmuWK8quE4vB5JG8Ks261UdT8MCqAqZAFFy7RbM8kbdV7XcNwXvS2i6GYq3J11k35GGF";
 
         private const string ADDRESS_B = "NV2K9m13tbr3NhSubtR3tD3kzWhEbqrkuZi3ts9XxZvqgeMCG1MkQQgF4cpiuEWdEeWiZhgzGdFKPcSNByCLaass2h6ftye3Q";
         private const string SEED_B = "because bicycle omission visited austere seeded runway upright stylishly often abducts pipeline toolbox abort segments vacation cider subtly ribbon gauze tanks huts eight factual abducts";
@@ -43,7 +46,8 @@ namespace Nerva.Rpc.Tests
         {
             Log.CreateInstance(true);
 
-            //Process.Start("nerva-wallet-rpc", "--testnet --rpc-bind-port 22525 --daemon-address 127.0.0.1:18566 --disable-rpc-login --wallet-dir ./");
+            Process.Start("nerva-wallet-rpc", "--testnet --rpc-bind-port 22525 --daemon-address 127.0.0.1:18566 --disable-rpc-login --wallet-dir ./");
+            Thread.Sleep(5000);
             CommandLineParser cmd = CommandLineParser.Parse(args);
 
             Configuration.ErrorLogVerbosity = Error_Log_Verbosity.Full;
@@ -51,11 +55,15 @@ namespace Nerva.Rpc.Tests
 
             string w = StringHelper.GenerateRandomHexString(4, true);
             string p = StringHelper.GenerateRandomHexString(4, true);
-
-            Test_RestoreWalletFromKeys(w, p);
-            Test_OpenWallet(w, p);
-            Test_GetAccounts();
-            Test_GetTransfers();
+            
+            
+            //Test_RestoreWalletFromKeys(w, p);
+            Test_OpenWallet("6AE2", "17D0");
+            Test_MakeIntegratedAddress(ADDRESS_A, ADDRESS_B);
+            Test_SplitIntegratedAddress(INT_A, ADDRESS_A, PID_A);
+            //Test_OpenWallet(w, p);
+            //Test_GetAccounts();
+            //Test_GetTransfers();
         }
 
         public static ulong ToAtomicUnits(double i)
@@ -222,9 +230,11 @@ namespace Nerva.Rpc.Tests
             }, walletPort).Run();  
         }
 
-        public static bool Test_MakeIntegratedAddress()
+        public static bool Test_MakeIntegratedAddress(string w1, string w2)
         {
-            new MakeIntegratedAddress(null, (MakeIntegratedAddressResponseData result) => {
+            new MakeIntegratedAddress(new MakeIntegratedAddressRequestData {
+                StandardAddress = w1
+            }, (MakeIntegratedAddressResponseData result) => {
                 Log.Instance.Write($"MakeIntegratedAddress: Passed, {result.IntegratedAddress}");
             }, (RequestError e) => {
                 Log.Instance.Write(Log_Severity.Error, "MakeIntegratedAddress: Failed");
@@ -232,13 +242,31 @@ namespace Nerva.Rpc.Tests
             }, walletPort).Run(); 
 
             new MakeIntegratedAddress(new MakeIntegratedAddressRequestData {
-                PaymentId = "f9a540b30a3c82e4"
+                PaymentId = PID_A,
+                StandardAddress = w1
             }, (MakeIntegratedAddressResponseData result) => {
                 Log.Instance.Write($"MakeIntegratedAddress: Passed, {result.IntegratedAddress}");
             }, (RequestError e) => {
                 Log.Instance.Write(Log_Severity.Error, "MakeIntegratedAddress: Failed");
                 Environment.Exit(1);
             }, walletPort).Run();  
+
+            return true;
+        }
+
+        public static bool Test_SplitIntegratedAddress(string ia, string sa, string pid)
+        {
+            new SplitIntegratedAddress(new SplitIntegratedAddressRequestData {
+                IntegratedAddress = ia
+            }, (SplitIntegratedAddressResponseData result) => {
+                if (result.StandardAddress == sa && result.PaymentId == pid)
+                    Log.Instance.Write($"SplitIntegratedAddress: Passed");
+                else
+                    Log.Instance.Write($"SplitIntegratedAddress: Failed");
+            }, (RequestError e) => {
+                Log.Instance.Write(Log_Severity.Error, "SplitIntegratedAddress: Failed");
+                Environment.Exit(1);
+            }, walletPort).Run(); 
 
             return true;
         }

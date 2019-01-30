@@ -20,6 +20,9 @@ namespace Nerva.Rpc.Wallet
     [JsonObject]
     public class MakeIntegratedAddressRequestData
     {
+        [JsonProperty("standard_address")]
+        public string StandardAddress { get; set; } = string.Empty;
+
         [JsonProperty("payment_id")]
         public string PaymentId { get; set; } = string.Empty;
     }
@@ -28,6 +31,9 @@ namespace Nerva.Rpc.Wallet
     public class MakeIntegratedAddressResponseData
     {
         [JsonProperty("integrated_address")]
-        public string IntegratedAddress { get; set; } = null;
+        public string IntegratedAddress { get; set; } = string.Empty;
+
+        [JsonProperty("payment_id")]
+        public string PaymentId { get; set; } = string.Empty;
     }
 }

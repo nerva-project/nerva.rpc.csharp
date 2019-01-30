@@ -11,7 +11,7 @@ namespace Nerva.Rpc.Wallet
         protected override bool DoRequest(out string result)
         {
             string json = null;
-            bool r = JsonRpcRequest("create_account", rpcData, out json);
+            bool r = JsonRpcRequest("label_account", rpcData, out json);
             result = r ? JsonConvert.DeserializeObject<ResponseData<string>>(json).Result : null;
             return r;
         }
