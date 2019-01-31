@@ -6,8 +6,8 @@ namespace Nerva.Rpc.Daemon
 {
     public class SetBans : Request<SetBansRequestData, string>
     {
-        public SetBans(SetBansRequestData rpcData, Action<string> completeAction, Action<RequestError> failedAction, uint port = 17566)
-            : base (rpcData, completeAction, failedAction, port) { }
+        public SetBans(SetBansRequestData rpcData, Action<string> completeAction, Action<RequestError> failedAction, uint port = 17566, Log log = null)
+            : base (rpcData, completeAction, failedAction, port, log) { }
             
         protected override bool DoRequest(out string result)
         {
@@ -33,7 +33,7 @@ namespace Nerva.Rpc.Daemon
         public bool Banned { get; set; } = true;
 
         [JsonProperty("seconds")]
-        public int Seconds => 6000;
+        public uint Seconds => 6000;
 
     }
 }

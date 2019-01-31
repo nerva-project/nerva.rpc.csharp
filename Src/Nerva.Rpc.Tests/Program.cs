@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using AngryWasp.Helpers;
-using AngryWasp.Logger;
 using Nerva.Rpc.Wallet;
 using Nerva.Rpc.Daemon;
 using System.Threading;
+using Log_Severity = AngryWasp.Logger.Log_Severity;
 
 namespace Nerva.Rpc.Tests
 {
@@ -44,26 +44,18 @@ namespace Nerva.Rpc.Tests
         [STAThread]
         public static void Main(string[] args)
         {
-            Log.CreateInstance(true);
+            AngryWasp.Logger.Log.CreateInstance(true);
 
             Process.Start("nerva-wallet-rpc", "--testnet --rpc-bind-port 22525 --daemon-address 127.0.0.1:18566 --disable-rpc-login --wallet-dir ./");
-            Thread.Sleep(5000);
+            Thread.Sleep(3000);
             CommandLineParser cmd = CommandLineParser.Parse(args);
-
-            Configuration.ErrorLogVerbosity = Error_Log_Verbosity.Full;
-            Configuration.TraceRpcData = true;
 
             string w = StringHelper.GenerateRandomHexString(4, true);
             string p = StringHelper.GenerateRandomHexString(4, true);
             
-            
-            //Test_RestoreWalletFromKeys(w, p);
-            Test_OpenWallet("6AE2", "17D0");
+            Test_RestoreWalletFromKeys(w, p);
             Test_MakeIntegratedAddress(ADDRESS_A, ADDRESS_B);
             Test_SplitIntegratedAddress(INT_A, ADDRESS_A, PID_A);
-            //Test_OpenWallet(w, p);
-            //Test_GetAccounts();
-            //Test_GetTransfers();
         }
 
         public static ulong ToAtomicUnits(double i)
@@ -79,11 +71,11 @@ namespace Nerva.Rpc.Tests
                 Password = wallet_pass,
             }, (RestoreWalletFromSeedResponseData result) => {
                 if (ADDRESS_A == result.Address)
-                    Log.Instance.Write("RestoreWalletFromSeed: Passed");
+                    AngryWasp.Logger.Log.Instance.Write("RestoreWalletFromSeed: Passed");
                 else
-                    Log.Instance.Write("RestoreWalletFromSeed: Failed. Mismatch");
+                    AngryWasp.Logger.Log.Instance.Write("RestoreWalletFromSeed: Failed. Mismatch");
             }, (RequestError e) => {
-                Log.Instance.Write(Log_Severity.Error, "RestoreWalletFromSeed: Failed");
+                AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "RestoreWalletFromSeed: Failed");
                 Environment.Exit(1);
             }, walletPort).Run(); 
         }
@@ -98,11 +90,11 @@ namespace Nerva.Rpc.Tests
                 Password = wallet_pass
             }, (RestoreWalletFromKeysResponseData result) => {
                 if (ADDRESS_A == result.Address)
-                    Log.Instance.Write("RestoreWalletFromKeys: Passed");
+                    AngryWasp.Logger.Log.Instance.Write("RestoreWalletFromKeys: Passed");
                 else
-                    Log.Instance.Write("RestoreWalletFromKeys: Failed. Mismatch");
+                    AngryWasp.Logger.Log.Instance.Write("RestoreWalletFromKeys: Failed. Mismatch");
             }, (RequestError e) => {
-                Log.Instance.Write(Log_Severity.Error, "RestoreWalletFromKeys: Failed");
+                AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "RestoreWalletFromKeys: Failed");
                 Environment.Exit(1);
             }, walletPort).Run(); 
         }
@@ -113,9 +105,9 @@ namespace Nerva.Rpc.Tests
                 Address = ADDRESS_A,
                 ReserveSize = 60
             }, (GetBlockTemplateResponseData result) => {
-                Log.Instance.Write("GetBlockTemplate: Passed");
+                AngryWasp.Logger.Log.Instance.Write("GetBlockTemplate: Passed");
             }, (RequestError e) => {
-                Log.Instance.Write(Log_Severity.Error, "GetBlockTemplate: Failed");
+                AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "GetBlockTemplate: Failed");
                 Environment.Exit(1);
             }, daemonPort).Run();  
         }
@@ -126,10 +118,10 @@ namespace Nerva.Rpc.Tests
                 FileName = wallet_file,
                 Password = wallet_pass
             }, (CreateWalletResponseData result) => {
-                Log.Instance.Write("CreateWallet: Passed");
+                AngryWasp.Logger.Log.Instance.Write("CreateWallet: Passed");
             }, (RequestError e) => {
-                Log.Instance.Write(Log_Severity.Error, "CreateWallet: Failed");
-                //Environment.Exit(1);
+                AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "CreateWallet: Failed");
+                Environment.Exit(1);
             }, walletPort).Run();  
         }
 
@@ -139,9 +131,9 @@ namespace Nerva.Rpc.Tests
                 FileName = wallet_file,
                 Password = wallet_pass
             }, (string result) => {
-                Log.Instance.Write("OpenWallet: Passed");
+                AngryWasp.Logger.Log.Instance.Write("OpenWallet: Passed");
             }, (RequestError e) => {
-                Log.Instance.Write(Log_Severity.Error, "OpenWallet: Failed");
+                AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "OpenWallet: Failed");
                 Environment.Exit(1);
             }, walletPort).Run();  
         }
@@ -149,9 +141,9 @@ namespace Nerva.Rpc.Tests
         public static bool Test_CloseWallet()
         {
             return new CloseWallet((string result) => {
-                Log.Instance.Write("CloseWallet: Passed");
+                AngryWasp.Logger.Log.Instance.Write("CloseWallet: Passed");
             }, (RequestError e) => {
-                Log.Instance.Write(Log_Severity.Error, "CloseWallet: Failed");
+                AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "CloseWallet: Failed");
                 Environment.Exit(1);
             }, walletPort).Run();  
         }
@@ -159,9 +151,9 @@ namespace Nerva.Rpc.Tests
         public static bool Test_StopWallet()
         {
             return new StopWallet((string result) => {
-                Log.Instance.Write("StopWallet: Passed");
+                AngryWasp.Logger.Log.Instance.Write("StopWallet: Passed");
             }, (RequestError e) => {
-                Log.Instance.Write(Log_Severity.Error, "StopWallet: Failed");
+                AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "StopWallet: Failed");
                 Environment.Exit(1);
             }, walletPort).Run();  
         }
@@ -169,9 +161,9 @@ namespace Nerva.Rpc.Tests
         public static bool Test_GetAccounts()
         {
             return new GetAccounts((GetAccountsResponseData result) => {
-                Log.Instance.Write($"GetAccounts: Passed, {result.TotalBalance} XNV");
+                AngryWasp.Logger.Log.Instance.Write($"GetAccounts: Passed, {result.TotalBalance} XNV");
             }, (RequestError e) => {
-                Log.Instance.Write(Log_Severity.Error, "GetAccounts: Failed");
+                AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "GetAccounts: Failed");
                 Environment.Exit(1);
             }, walletPort).Run();  
         }
@@ -181,9 +173,9 @@ namespace Nerva.Rpc.Tests
             return new GetTransfers(new GetTransfersRequestData {
                 AccountIndex = 0
             }, (GetTransfersResponseData result) => {
-                Log.Instance.Write($"GetTransfers: Passed, {result.Incoming.Count}/{result.Outgoing.Count} (in/out)");
+                AngryWasp.Logger.Log.Instance.Write($"GetTransfers: Passed, {result.Incoming.Count}/{result.Outgoing.Count} (in/out)");
             }, (RequestError e) => {
-                Log.Instance.Write(Log_Severity.Error, "GetTransfers: Failed");
+                AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "GetTransfers: Failed");
                 Environment.Exit(1);
             }, walletPort).Run();  
         }
@@ -193,9 +185,9 @@ namespace Nerva.Rpc.Tests
             return new QueryKey(new QueryKeyRequestData {
                 KeyType = Key_Type.All_Keys.ToString().ToLower()
             }, (QueryKeyResponseData result) => {
-                Log.Instance.Write($"QueryKey: Passed, {result.PublicViewKey}");
+                AngryWasp.Logger.Log.Instance.Write($"QueryKey: Passed, {result.PublicViewKey}");
             }, (RequestError e) => {
-                Log.Instance.Write(Log_Severity.Error, "QueryKery: Failed");
+                AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "QueryKery: Failed");
             }, walletPort).Run();  
         }
 
@@ -204,9 +196,9 @@ namespace Nerva.Rpc.Tests
             return new CreateAccount(new CreateAccountRequestData {
                 Label = "New Account"
             }, (CreateAccountResponseData result) => {
-                Log.Instance.Write("CreateAccount: Passed");
+                AngryWasp.Logger.Log.Instance.Write("CreateAccount: Passed");
             }, (RequestError e) => {
-                Log.Instance.Write(Log_Severity.Error, "CreateAccount: Failed");
+                AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "CreateAccount: Failed");
             }, walletPort).Run();  
         }
 
@@ -224,9 +216,9 @@ namespace Nerva.Rpc.Tests
                     }
                 }
             }, (TransferResponseData result) => {
-                Log.Instance.Write($"Transfer Without PID: Passed, {result.Amount} XNV");
+                AngryWasp.Logger.Log.Instance.Write($"Transfer Without PID: Passed, {result.Amount} XNV");
             }, (RequestError e) => {
-                Log.Instance.Write(Log_Severity.Error, "Transfer Without PID: Failed");
+                AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "Transfer Without PID: Failed");
             }, walletPort).Run();  
         }
 
@@ -235,9 +227,9 @@ namespace Nerva.Rpc.Tests
             new MakeIntegratedAddress(new MakeIntegratedAddressRequestData {
                 StandardAddress = w1
             }, (MakeIntegratedAddressResponseData result) => {
-                Log.Instance.Write($"MakeIntegratedAddress: Passed, {result.IntegratedAddress}");
+                AngryWasp.Logger.Log.Instance.Write($"MakeIntegratedAddress: Passed, {result.IntegratedAddress}");
             }, (RequestError e) => {
-                Log.Instance.Write(Log_Severity.Error, "MakeIntegratedAddress: Failed");
+                AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "MakeIntegratedAddress: Failed");
                 Environment.Exit(1);
             }, walletPort).Run(); 
 
@@ -245,9 +237,9 @@ namespace Nerva.Rpc.Tests
                 PaymentId = PID_A,
                 StandardAddress = w1
             }, (MakeIntegratedAddressResponseData result) => {
-                Log.Instance.Write($"MakeIntegratedAddress: Passed, {result.IntegratedAddress}");
+                AngryWasp.Logger.Log.Instance.Write($"MakeIntegratedAddress: Passed, {result.IntegratedAddress}");
             }, (RequestError e) => {
-                Log.Instance.Write(Log_Severity.Error, "MakeIntegratedAddress: Failed");
+                AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "MakeIntegratedAddress: Failed");
                 Environment.Exit(1);
             }, walletPort).Run();  
 
@@ -260,11 +252,11 @@ namespace Nerva.Rpc.Tests
                 IntegratedAddress = ia
             }, (SplitIntegratedAddressResponseData result) => {
                 if (result.StandardAddress == sa && result.PaymentId == pid)
-                    Log.Instance.Write($"SplitIntegratedAddress: Passed");
+                    AngryWasp.Logger.Log.Instance.Write($"SplitIntegratedAddress: Passed");
                 else
-                    Log.Instance.Write($"SplitIntegratedAddress: Failed");
+                    AngryWasp.Logger.Log.Instance.Write($"SplitIntegratedAddress: Failed");
             }, (RequestError e) => {
-                Log.Instance.Write(Log_Severity.Error, "SplitIntegratedAddress: Failed");
+                AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "SplitIntegratedAddress: Failed");
                 Environment.Exit(1);
             }, walletPort).Run(); 
 
@@ -286,18 +278,18 @@ namespace Nerva.Rpc.Tests
                 },
                 PaymentId = StringHelper.GenerateRandomHexString(64)
             }, (TransferResponseData result) => {
-                Log.Instance.Write($"Transfer: Passed, {result.Amount} XNV");
+                AngryWasp.Logger.Log.Instance.Write($"Transfer: Passed, {result.Amount} XNV");
             }, (RequestError e) => {
-                Log.Instance.Write(Log_Severity.Error, "Transfer: Failed");
+                AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "Transfer: Failed");
             }, walletPort).Run();  
         }
 
         public static bool Test_GetBlockCount()
         {
             return new GetBlockCount((uint result) => {
-                Log.Instance.Write($"GetBlockCount: Passed, {result}");
+                AngryWasp.Logger.Log.Instance.Write($"GetBlockCount: Passed, {result}");
             }, (RequestError e) => {
-                Log.Instance.Write(Log_Severity.Error, "GetBlockCount: Failed");
+                AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "GetBlockCount: Failed");
                 Environment.Exit(1);
             }, daemonPort).Run();  
         }
@@ -305,9 +297,9 @@ namespace Nerva.Rpc.Tests
         public static bool Test_GetInfo()
         {
             return new GetInfo((GetInfoResponseData result) => {
-                Log.Instance.Write($"GetInfo: Passed, {result.Version}");
+                AngryWasp.Logger.Log.Instance.Write($"GetInfo: Passed, {result.Version}");
             }, (RequestError e) => {
-                Log.Instance.Write(Log_Severity.Error, "GetInfo: Failed");
+                AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "GetInfo: Failed");
                 Environment.Exit(1);
             }, daemonPort).Run();  
         }
@@ -315,9 +307,9 @@ namespace Nerva.Rpc.Tests
         public static bool Test_GetConnections()
         {
             return new GetConnections((List<GetConnectionsResponseData> result) => {
-                Log.Instance.Write($"GetConnections: Passed, {result.Count} connections");
+                AngryWasp.Logger.Log.Instance.Write($"GetConnections: Passed, {result.Count} connections");
             }, (RequestError e) => {
-                Log.Instance.Write(Log_Severity.Error, "GetConnections: Failed");
+                AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "GetConnections: Failed");
                 Environment.Exit(1);
             }, daemonPort).Run();  
         }
@@ -328,9 +320,9 @@ namespace Nerva.Rpc.Tests
                 MinerAddress = ADDRESS_A,
                 MiningThreads = 2
             }, (string result) => {
-                Log.Instance.Write("StartMining: Passed");
+                AngryWasp.Logger.Log.Instance.Write("StartMining: Passed");
             }, (RequestError e) => {
-                Log.Instance.Write(Log_Severity.Error, "StartMining: Failed");
+                AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "StartMining: Failed");
                 Environment.Exit(1);
             }, daemonPort).Run();  
         }
@@ -338,9 +330,9 @@ namespace Nerva.Rpc.Tests
         public static bool Test_StopMining()
         {
             return new StopMining((string result) => {
-                Log.Instance.Write("StopMining: Passed");
+                AngryWasp.Logger.Log.Instance.Write("StopMining: Passed");
             }, (RequestError e) => {
-                Log.Instance.Write(Log_Severity.Error, "StopMining: Failed");
+                AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "StopMining: Failed");
                 Environment.Exit(1);
             }, daemonPort).Run();  
         }
@@ -348,9 +340,9 @@ namespace Nerva.Rpc.Tests
         public static bool Test_StopDaemon()
         {
             return new StopDaemon((string result) => {
-                Log.Instance.Write("StopDaemon: Passed");
+                AngryWasp.Logger.Log.Instance.Write("StopDaemon: Passed");
             }, (RequestError e) => {
-                Log.Instance.Write(Log_Severity.Error, "StopDaemon: Failed");
+                AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "StopDaemon: Failed");
                 Environment.Exit(1);
             }, daemonPort).Run();  
         }
@@ -369,9 +361,9 @@ namespace Nerva.Rpc.Tests
                     new Ban { Host = "0.1.0.1", Banned = ban }
                 }
             }, (string result) => {
-                Log.Instance.Write("SetBans: Passed");
+                AngryWasp.Logger.Log.Instance.Write("SetBans: Passed");
             }, (RequestError e) => {
-                Log.Instance.Write(Log_Severity.Error, "SetBans: Failed");
+                AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "SetBans: Failed");
                 Environment.Exit(1);
             }, daemonPort).Run(); 
         }

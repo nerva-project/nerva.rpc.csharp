@@ -5,8 +5,8 @@ namespace Nerva.Rpc.Daemon
 {
     public class StartMining : Request<StartMiningRequestData, string>
     {
-        public StartMining(StartMiningRequestData rpcData, Action<string> completeAction, Action<RequestError> failedAction, uint port = 17566)
-            : base (rpcData, completeAction, failedAction, port) { }
+        public StartMining(StartMiningRequestData rpcData, Action<string> completeAction, Action<RequestError> failedAction, uint port = 17566, Log log = null)
+            : base (rpcData, completeAction, failedAction, port, log) { }
 
         protected override bool DoRequest(out string result) => RpcRequest("start_mining", JsonConvert.SerializeObject(rpcData), out result);
     }
@@ -24,6 +24,6 @@ namespace Nerva.Rpc.Daemon
         public string MinerAddress { get; set; }
 
         [JsonProperty("threads_count")]
-        public int MiningThreads { get; set; } = 1;
+        public uint MiningThreads { get; set; } = 1;
     }
 }

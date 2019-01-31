@@ -7,8 +7,8 @@ namespace Nerva.Rpc.Wallet
 {
     public class QueryKey : Request<QueryKeyRequestData, QueryKeyResponseData>
     {
-        public QueryKey(QueryKeyRequestData rpcData, Action<QueryKeyResponseData> completeAction, Action<RequestError> failedAction, uint port = 17566)
-            : base (rpcData, completeAction, failedAction, port) { }
+        public QueryKey(QueryKeyRequestData rpcData, Action<QueryKeyResponseData> completeAction, Action<RequestError> failedAction, uint port = 17566, Log log = null)
+            : base (rpcData, completeAction, failedAction, port, log) { }
             
         protected override bool DoRequest(out QueryKeyResponseData result)
         {

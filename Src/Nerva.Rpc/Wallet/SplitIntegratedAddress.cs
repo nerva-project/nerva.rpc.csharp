@@ -5,8 +5,9 @@ namespace Nerva.Rpc.Wallet
 {
     public class SplitIntegratedAddress : Request<SplitIntegratedAddressRequestData, SplitIntegratedAddressResponseData>
     {
-        public SplitIntegratedAddress(SplitIntegratedAddressRequestData rpcData, Action<SplitIntegratedAddressResponseData> completeAction, Action<RequestError> failedAction, uint port = 17566)
-            : base (rpcData, completeAction, failedAction, port) { }
+        public SplitIntegratedAddress(SplitIntegratedAddressRequestData rpcData, Action<SplitIntegratedAddressResponseData> completeAction, 
+            Action<RequestError> failedAction, uint port = 17566, Log log = null)
+            : base (rpcData, completeAction, failedAction, port, log) { }
             
         protected override bool DoRequest(out SplitIntegratedAddressResponseData result)
         {

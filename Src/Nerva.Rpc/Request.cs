@@ -12,14 +12,16 @@ namespace Nerva.Rpc
     public abstract class Request<T_Req, T_Resp>
     {
         protected RequestError error;
+        protected Log log;
         protected uint port;
         protected T_Req rpcData;
         protected Action<T_Resp> completeAction;
         protected Action<RequestError> failedAction;
 
-        public Request(T_Req rpcData, Action<T_Resp> completeAction, Action<RequestError> failedAction, uint port = 17566)
+        public Request(T_Req rpcData, Action<T_Resp> completeAction, Action<RequestError> failedAction, uint port = 17566, Log log = null)
         {
-            error = new RequestError();
+            this.error = new RequestError();
+            this.log = (log == null) ? Log.Presets.Normal : log;
             this.port = port;
 
             this.rpcData = rpcData;
@@ -57,55 +59,54 @@ namespace Nerva.Rpc
         {
             result = null;
 
-            if (!new Requester(port).MakeRpcRequest(methodName, postData, out result))
+            if (!new Requester(port).MakeRpcRequest(methodName, postData, log, out result))
                 return false;
 
             var status = JObject.Parse(result)["status"].Value<string>();
             var ok = status.ToLower() == "ok";
 
-            if (Configuration.TraceRpcData)
-                switch (Configuration.ErrorLogVerbosity)
-                {
-                    case Error_Log_Verbosity.Detailed:
-                        Log.Instance.Write(Log_Severity.None, $"RPC Params: {postData}");
-                        break;
-                    case Error_Log_Verbosity.Full:
-                        Log.Instance.Write(Log_Severity.None, $"RPC Params: {postData}");
-                        Log.Instance.Write(Log_Severity.None, $"RPC Response: {(string.IsNullOrEmpty(result) ? "None" : result)}");
-                        break;
-                }
+            string paramData = !string.IsNullOrEmpty(postData) ? postData : "None";
+
+            
+
+            bool hasError = false;
 
             if (!ok)
             {
                 error.Code = 0; //no error code provided for rpc methods
                 error.Message = status;
+                hasError = true;
+            }
 
-                switch (Configuration.ErrorLogVerbosity)
+            if (hasError)
+            {
+                if (log.LogRpcErrors)
+                    AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, $"{methodName} returned error {error.Code}: {error.Message}");
+
+                if (log.OnlyLogRpcOnError)
                 {
-                    case Error_Log_Verbosity.Normal:
-                        Log.Instance.Write(Log_Severity.Error, $"RPC call returned error {error.Code}: {error.Message}");
-                        break;
-                    case Error_Log_Verbosity.Detailed:
-                        if (!Configuration.TraceRpcData)
-                            Log.Instance.Write(Log_Severity.None, $"RPC Params: {postData}");
+                    if (log.LogRpcRequest)
+                        AngryWasp.Logger.Log.Instance.Write($"{methodName} request: {paramData}");
 
-                        Log.Instance.Write(Log_Severity.Error, $"RPC call returned error {error.Code}: {error.Message}");
-                        break;
-                    case Error_Log_Verbosity.Full:
-                        if (!Configuration.TraceRpcData)
-                        {
-                            Log.Instance.Write(Log_Severity.None, $"RPC Params: {postData}");
-                            Log.Instance.Write(Log_Severity.None, $"RPC Response: {(string.IsNullOrEmpty(result) ? "None" : result)}");
-                        }
-
-                        Log.Instance.Write(Log_Severity.Error, $"RPC call returned error {error.Code}: {error.Message}");
-                        break;
+                    if (log.LogRpcResponse)
+                        AngryWasp.Logger.Log.Instance.Write($"{methodName} response: {(string.IsNullOrEmpty(result) ? "None" : result)}");
                 }
 
                 return false;
             }
+            else
+            {
+                if (!log.OnlyLogRpcOnError)
+                {
+                    if (log.LogRpcRequest)
+                        AngryWasp.Logger.Log.Instance.Write($"{methodName} request: {paramData}");
 
-            return true;
+                    if (log.LogRpcResponse)
+                        AngryWasp.Logger.Log.Instance.Write($"{methodName} response: {(string.IsNullOrEmpty(result) ? "None" : result)}");
+                }
+
+                return true;
+            }
         }
 
         protected bool JsonRpcRequest(string rpc, T_Req param, out string result)
@@ -121,20 +122,10 @@ namespace Nerva.Rpc
                     Params = param
                 };
 
-            if (!new Requester(port).MakeJsonRpcRequest(jr, out result))
-                return false;
+            string paramData = param != null ? jr.Encode() : "none";
 
-            if (Configuration.TraceRpcData)
-                switch (Configuration.ErrorLogVerbosity)
-                {
-                    case Error_Log_Verbosity.Detailed:
-                        Log.Instance.Write(Log_Severity.None, $"RPC Params: {jr.GetParamsJson()}");
-                        break;
-                    case Error_Log_Verbosity.Full:
-                        Log.Instance.Write(Log_Severity.None, $"RPC Params: {jr.GetParamsJson()}");
-                        Log.Instance.Write(Log_Severity.None, $"RPC Response: {(string.IsNullOrEmpty(result) ? "None" : result)}");
-                        break;
-                }
+            if (!new Requester(port).MakeJsonRpcRequest(jr, log, out result))
+                return false;
 
             var e = JObject.Parse(result)["error"];
 
@@ -143,37 +134,36 @@ namespace Nerva.Rpc
                 error.Code = e["code"].Value<int>();
                 error.Message = e["message"].Value<string>();
 
-                string paramData = param != null ? jr.GetParamsJson() : "None";
-
-                if (Configuration.SuppressRpcCodes.Contains(error.Code))
+                if (log.SuppressRpcCodes.Contains(error.Code))
                     return false;
 
-                switch (Configuration.ErrorLogVerbosity)
+                if (log.LogRpcErrors)
+                    AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, $"{rpc} returned error {error.Code}: {error.Message}");
+
+                if (log.OnlyLogRpcOnError)
                 {
-                    case Error_Log_Verbosity.Normal:
-                        Log.Instance.Write(Log_Severity.Error, $"JSON RPC call returned error {error.Code}: {error.Message}");
-                        break;
-                    case Error_Log_Verbosity.Detailed:
-                        if (!Configuration.TraceRpcData)
-                            Log.Instance.Write(Log_Severity.None, $"JSON RPC Params: {paramData}");
+                    if (log.LogRpcRequest)
+                        AngryWasp.Logger.Log.Instance.Write($"{rpc} request: {paramData}");
 
-                        Log.Instance.Write(Log_Severity.Error, $"JSON RPC call returned error {error.Code}: {error.Message}");
-                        break;
-                    case Error_Log_Verbosity.Full:
-                        if (!Configuration.TraceRpcData)
-                        {
-                            Log.Instance.Write(Log_Severity.None, $"JSON RPC Params: {paramData}");
-                            Log.Instance.Write(Log_Severity.None, $"JSON RPC Response:\r\n{(string.IsNullOrEmpty(result) ? "None" : result)}");
-                        }
-
-                        Log.Instance.Write(Log_Severity.Error, $"JSON RPC call returned error {error.Code}: {error.Message}");
-                        break;
+                    if (log.LogRpcResponse)
+                        AngryWasp.Logger.Log.Instance.Write($"{rpc} response: {(string.IsNullOrEmpty(result) ? "None" : result)}");
                 }
-                
+
                 return false;
             }
+            else
+            {
+                if (!log.OnlyLogRpcOnError)
+                {
+                    if (log.LogRpcRequest)
+                        AngryWasp.Logger.Log.Instance.Write($"{rpc} request: {paramData}");
 
-            return true;
+                    if (log.LogRpcResponse)
+                        AngryWasp.Logger.Log.Instance.Write($"{rpc} response: {(string.IsNullOrEmpty(result) ? "None" : result)}");
+                }
+
+                return true;
+            }
         }
     }
 

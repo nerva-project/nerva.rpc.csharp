@@ -6,8 +6,8 @@ namespace Nerva.Rpc.Wallet
 {
     public class GetTransfers : Request<GetTransfersRequestData, GetTransfersResponseData>
     {
-        public GetTransfers(GetTransfersRequestData rpcData, Action<GetTransfersResponseData> completeAction, Action<RequestError> failedAction, uint port = 17566)
-            : base (rpcData, completeAction, failedAction, port) { }
+        public GetTransfers(GetTransfersRequestData rpcData, Action<GetTransfersResponseData> completeAction, Action<RequestError> failedAction, uint port = 17566, Log log = null)
+            : base (rpcData, completeAction, failedAction, port, log) { }
             
         protected override bool DoRequest(out GetTransfersResponseData result)
         {
@@ -40,7 +40,7 @@ namespace Nerva.Rpc.Wallet
         public bool FilterByHeight => false;
 
         [JsonProperty("min_height")]
-        public uint ScanFromHeight { get; set; } = 0;
+        public ulong ScanFromHeight { get; set; } = 0;
 
         [JsonProperty("account_index")]
         public uint AccountIndex { get; set; } = 0;

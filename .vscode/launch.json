@@ -2,31 +2,22 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug",
+            "name": "Test-Linux",
             "type": "mono",
             "request": "launch",
             "program": "${workspaceRoot}/Bin/Debug/Nerva.Rpc.Tests.exe",
-            "cwd": "${workspaceRoot}/Bin",
+            "cwd": "${workspaceRoot}/Bin/Debug",
             "preLaunchTask": "build-debug",
             "args":[]
         },
         {
-            "name": "Test",
-            "type": "mono",
+            "name": "Test-Windows",
+            "type": "clr",
             "request": "launch",
-            "program": "${workspaceRoot}/Bin/Debug/Nerva.Rpc.Tests.exe",
-            "cwd": "${workspaceRoot}/Bin",
+            "program": "${workspaceRoot}\\Bin\\Debug\\Nerva.Rpc.Tests.exe",
+            "cwd": "${workspaceRoot}\\Bin\\Debug",
             "preLaunchTask": "build-debug",
             "args":[]
-        },
-        {
-            "name": "Release",
-            "type": "mono",
-            "request": "launch",
-            "program": "${workspaceRoot}/Bin/Release/Nerva.Rpc.Tests.exe",
-            "cwd": "${workspaceRoot}/Bin",
-            "preLaunchTask": "build-release",
-            "args":[ ]
         },
         {
             "name": "Attach",

@@ -3,24 +3,40 @@ using Newtonsoft.Json;
 
 namespace Nerva.Rpc
 {
-    public enum Error_Log_Verbosity
+    public class Log
     {
-        //no messages
-        None,
-        //show a generic error message
-        Normal, 
-        //show normal + request data
-        Detailed, 
-        //show detailed + exceptions
-        Full
-    }
+        public class Presets
+        {
+            //Log nothing
+            public static readonly Log None = new Log();
 
-    public static class Configuration
-    {
-        public static bool TraceRpcData { get; set; } = false;
+            //Sane default. Logs errors and only logs rpc traffic when an error occurs
+            public static readonly Log Normal = new Log
+            {
+                LogRpcRequest = true,
+                LogRpcResponse = true,
+                LogRpcErrors = true,
+                LogNetworkErrors = true,
+                OnlyLogRpcOnError = true
+            };
 
-        public static Error_Log_Verbosity ErrorLogVerbosity { get; set; } = Error_Log_Verbosity.None;
+            //Log everything. Creates a lot of terminal spam
+            public static readonly Log Full = new Log
+            {
+                LogRpcRequest = true,
+                LogRpcResponse = true,
+                LogRpcErrors = true,
+                LogNetworkErrors = true,
+                OnlyLogRpcOnError = false
+            };
+        }
 
-        public static List<int> SuppressRpcCodes { get; set; } = new List<int>();
+        public List<int> SuppressRpcCodes { get; set; } = new List<int>();
+        public bool LogRpcRequest { get; set; } = false;
+        public bool LogRpcResponse { get; set; } = false;
+        public bool LogRpcErrors { get; set; } = false;
+        public bool LogNetworkErrors { get; set; } = false;
+
+        public bool OnlyLogRpcOnError { get; set; } = true;
     }
 }

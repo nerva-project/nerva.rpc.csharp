@@ -6,8 +6,8 @@ namespace Nerva.Rpc.Daemon
 {
     public class GetInfo : Request<object, GetInfoResponseData>
     {
-        public GetInfo(Action<GetInfoResponseData> completeAction, Action<RequestError> failedAction, uint port = 17566)
-            : base (null, completeAction, failedAction, port) { }
+        public GetInfo(Action<GetInfoResponseData> completeAction, Action<RequestError> failedAction, uint port = 17566, Log log = null)
+            : base (null, completeAction, failedAction, port, log) { }
 
         protected override bool DoRequest(out GetInfoResponseData result)
         {
@@ -22,37 +22,37 @@ namespace Nerva.Rpc.Daemon
     public class GetInfoResponseData
     {
         [JsonProperty("alt_block_count")]
-        public int AltBlockCount { get; set; }
+        public uint AltBlockCount { get; set; }
 
         [JsonProperty("block_size_limit")]
-        public int BlockSizeLimit { get; set; }
+        public uint BlockSizeLimit { get; set; }
 
         [JsonProperty("block_size_median")]
-        public int BlockSizeMedian { get; set; }
+        public uint BlockSizeMedian { get; set; }
 
         [JsonProperty("bootstrap_daemon_address")]
         public string BootstrapDaemonAddress { get; set; }
 
         [JsonProperty("cumulative_difficulty")]
-        public long CumulativeDifficulty { get; set; }
+        public ulong CumulativeDifficulty { get; set; }
 
         [JsonProperty("difficulty")]
-        public long Difficulty { get; set; }
+        public ulong Difficulty { get; set; }
 
         [JsonProperty("free_space")]
-        public long FreeSpace { get; set; }
+        public ulong FreeSpace { get; set; }
 
         [JsonProperty("grey_peerlist_size")]
-        public int GreyPeerListSize { get; set; }
+        public uint GreyPeerListSize { get; set; }
 
         [JsonProperty("height")]
-        public long Height { get; set; }
+        public ulong Height { get; set; }
 
         [JsonProperty("height_without_bootstrap")]
-        public long HeightWithoutBootstrap { get; set; }
+        public ulong HeightWithoutBootstrap { get; set; }
 
         [JsonProperty("incoming_connections_count")]
-        public int IncomingConnectionsCount { get; set; }
+        public uint IncomingConnectionsCount { get; set; }
 
         [JsonProperty("mainnet")]
         public bool Mainnet { get; set; }
@@ -61,25 +61,25 @@ namespace Nerva.Rpc.Daemon
         public bool Offline { get; set; }
 
         [JsonProperty("outgoing_connections_count")]
-        public int OutgoingConnectionsCount { get; set; }
+        public uint OutgoingConnectionsCount { get; set; }
 
         [JsonProperty("rpc_connections_count")]
-        public int RpcConnectionsCount { get; set; }
+        public uint RpcConnectionsCount { get; set; }
 
         [JsonProperty("stagenet")]
         public bool Stagenet { get; set; }
 
         [JsonProperty("start_time")]
-        public long StartTime { get; set; }
+        public ulong StartTime { get; set; }
 
         [JsonProperty("status")]
         public string Status { get; set; }
 
         [JsonProperty("target")]
-        public int Target { get; set; }
+        public uint Target { get; set; }
 
         [JsonProperty("target_height")]
-        public long TargetHeight { get; set; }
+        public ulong TargetHeight { get; set; }
 
         [JsonProperty("testnet")]
         public bool Testnet { get; set; }
@@ -88,10 +88,10 @@ namespace Nerva.Rpc.Daemon
         public string TopBlockHash { get; set; }
 
         [JsonProperty("tx_count")]
-        public int TxCount { get; set; }
+        public uint TxCount { get; set; }
 
         [JsonProperty("tx_pool_size")]
-        public int TxPoolSize { get; set; }
+        public uint TxPoolSize { get; set; }
 
         [JsonProperty("untrusted")]
         public bool Untrusted { get; set; }
@@ -103,6 +103,6 @@ namespace Nerva.Rpc.Daemon
         public bool WasBootstrapEverUsed { get; set; }
 
         [JsonProperty("white_peerlist_size")]
-        public int WhitePeerListSize { get; set; }
+        public uint WhitePeerListSize { get; set; }
     }
 }

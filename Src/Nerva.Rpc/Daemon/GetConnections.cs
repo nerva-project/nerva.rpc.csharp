@@ -6,8 +6,8 @@ namespace Nerva.Rpc.Daemon
 {
     public class GetConnections : Request<object, List<GetConnectionsResponseData>>
     {
-        public GetConnections(Action<List<GetConnectionsResponseData>> completeAction, Action<RequestError> failedAction, uint port = 17566)
-            : base (null, completeAction, failedAction, port) { }
+        public GetConnections(Action<List<GetConnectionsResponseData>> completeAction, Action<RequestError> failedAction, uint port = 17566, Log log = null)
+            : base (null, completeAction, failedAction, port, log) { }
             
         protected override bool DoRequest(out List<GetConnectionsResponseData> result)
         {
@@ -32,22 +32,22 @@ namespace Nerva.Rpc.Daemon
         public string Address { get; set; }
 
         [JsonProperty("avg_download")]
-        public int AvgDownload { get; set; }
+        public uint AvgDownload { get; set; }
 
         [JsonProperty("avg_upload")]
-        public int AvgUpload { get; set; }
+        public uint AvgUpload { get; set; }
 
         [JsonProperty("connection_id")]
         public string ConnectionId { get; set; }
 
         [JsonProperty("current_download")]
-        public int CurrentDownload { get; set; }
+        public uint CurrentDownload { get; set; }
 
         [JsonProperty("current_upload")]
-        public int CurrentUpload { get; set; }
+        public uint CurrentUpload { get; set; }
 
         [JsonProperty("height")]
-        public int Height { get; set; }
+        public uint Height { get; set; }
 
         [JsonProperty("host")]
         public string Host { get; set; }
@@ -59,7 +59,7 @@ namespace Nerva.Rpc.Daemon
         public string IP { get; set; }
 
         [JsonProperty("live_time")]
-        public long LiveTime { get; set; }
+        public ulong LiveTime { get; set; }
 
         [JsonProperty("local_ip")]
         public bool LocalIP { get; set; }
@@ -71,24 +71,24 @@ namespace Nerva.Rpc.Daemon
         public string PeerId { get; set; }
 
         [JsonProperty("port")]
-        public int Port { get; set; }
+        public uint Port { get; set; }
 
         [JsonProperty("recv_count")]
-        public int RecvCount { get; set; }
+        public uint RecvCount { get; set; }
 
         [JsonProperty("recv_idle_time")]
-        public int RecvIdleTime { get; set; }
+        public uint RecvIdleTime { get; set; }
 
         [JsonProperty("send_count")]
-        public int SendCount { get; set; }
+        public uint SendCount { get; set; }
 
         [JsonProperty("send_idle_time")]
-        public int SendIdleTime { get; set; }
+        public uint SendIdleTime { get; set; }
 
         [JsonProperty("state")]
         public string State { get; set; }
 
         [JsonProperty("support_flags")]
-        public int SupportFlags { get; set; }
+        public uint SupportFlags { get; set; }
     }
 }

@@ -6,8 +6,9 @@ namespace Nerva.Rpc.Daemon
 {
     public class GetBlockTemplate : Request<GetBlockTemplateRequestData, GetBlockTemplateResponseData>
     {
-        public GetBlockTemplate(GetBlockTemplateRequestData rpcData, Action<GetBlockTemplateResponseData> completeAction, Action<RequestError> failedAction, uint port = 17566)
-            : base (rpcData, completeAction, failedAction, port) { }
+        public GetBlockTemplate(GetBlockTemplateRequestData rpcData, Action<GetBlockTemplateResponseData> completeAction, 
+            Action<RequestError> failedAction, uint port = 17566, Log log = null)
+            : base (rpcData, completeAction, failedAction, port, log) { }
             
         protected override bool DoRequest(out GetBlockTemplateResponseData result)
         {
@@ -22,7 +23,7 @@ namespace Nerva.Rpc.Daemon
     public class GetBlockTemplateRequestData
     {
         [JsonProperty("reserve_size")]
-        public int ReserveSize { get; set; }
+        public uint ReserveSize { get; set; }
 
         [JsonProperty("wallet_address")]
         public string Address { get; set; }

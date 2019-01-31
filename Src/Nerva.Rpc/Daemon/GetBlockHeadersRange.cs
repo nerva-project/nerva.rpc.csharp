@@ -7,8 +7,9 @@ namespace Nerva.Rpc.Daemon
 {
     public class GetBlockHeadersRange : Request<GetBlockHeadersRangeRequestData, List<BlockHeaderResponseData>>
     {
-        public GetBlockHeadersRange(GetBlockHeadersRangeRequestData rpcData, Action<List<BlockHeaderResponseData>> completeAction, Action<RequestError> failedAction, uint port = 17566)
-            : base (rpcData, completeAction, failedAction, port) { }
+        public GetBlockHeadersRange(GetBlockHeadersRangeRequestData rpcData, Action<List<BlockHeaderResponseData>> completeAction, 
+            Action<RequestError> failedAction, uint port = 17566, Log log = null)
+            : base (rpcData, completeAction, failedAction, port, log) { }
 
         protected override bool DoRequest(out List<BlockHeaderResponseData> result)
         {

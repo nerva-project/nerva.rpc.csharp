@@ -15,7 +15,7 @@ namespace Nerva.Rpc
             this.port = port;
         }
 
-        public bool MakeJsonRpcRequest(RequestData request, out string jsonString)
+        public bool MakeJsonRpcRequest(RequestData request, Log log, out string jsonString)
         {
             try
             {
@@ -43,24 +43,14 @@ namespace Nerva.Rpc
             }
             catch (Exception ex)
             {
-                string paramData = request.GetParamsJson();
-                if (paramData == null) 
-                    paramData = "None";
-
-                switch (Configuration.ErrorLogVerbosity)
+                if (log.LogNetworkErrors)
                 {
-                    case Error_Log_Verbosity.Normal:
-                        Log.Instance.Write(Log_Severity.Error, $"Could not complete JSON RPC call: {request.MethodName}");
-                        break;
-                    case Error_Log_Verbosity.Detailed:
-                        Log.Instance.Write(Log_Severity.Error, $"Could not complete JSON RPC call: {request.MethodName}");
-                        Log.Instance.Write(Log_Severity.None, $"JSON RPC Params: {paramData}");
-                        break;
-                    case Error_Log_Verbosity.Full:
-                        Log.Instance.Write(Log_Severity.Error, $"Could not complete JSON RPC call: {request.MethodName}");
-                        Log.Instance.Write(Log_Severity.None, $"JSON RPC Params: {paramData}");
-                        Log.Instance.WriteNonFatalException(ex);
-                        break;
+                    AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, $"Could not complete JSON RPC call: {request.MethodName}");
+                    string paramData = request.GetParamsJson();
+                    if (log.LogRpcRequest && paramData != null)
+                        AngryWasp.Logger.Log.Instance.Write(Log_Severity.None, $"{request.MethodName} params: {paramData}");
+
+                    AngryWasp.Logger.Log.Instance.WriteNonFatalException(ex);
                 }
 
                 jsonString = null;
@@ -68,7 +58,7 @@ namespace Nerva.Rpc
             }
         }
 
-        public bool MakeRpcRequest(string methodName, string postDataString, out string jsonString)
+        public bool MakeRpcRequest(string methodName, string postDataString, Log log, out string jsonString)
         {
             try
             {
@@ -98,20 +88,13 @@ namespace Nerva.Rpc
             }
             catch (Exception ex)
             {
-                switch (Configuration.ErrorLogVerbosity)
+                if (log.LogNetworkErrors)
                 {
-                    case Error_Log_Verbosity.Normal:
-                        Log.Instance.Write(Log_Severity.Error, $"Could not complete JSON RPC call: {methodName}");
-                        break;
-                    case Error_Log_Verbosity.Detailed:
-                        Log.Instance.Write(Log_Severity.Error, $"Could not complete JSON RPC call: {methodName}");
-                        Log.Instance.Write(Log_Severity.None, $"RPC Params: {postDataString}");
-                        break;
-                    case Error_Log_Verbosity.Full:
-                        Log.Instance.Write(Log_Severity.Error, $"Could not complete JSON RPC call: {methodName}");
-                        Log.Instance.Write(Log_Severity.None, $"RPC Params: {postDataString}");
-                        Log.Instance.WriteNonFatalException(ex);
-                        break;
+                    AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, $"Could not complete JSON RPC call: {methodName}");
+                    if (log.LogRpcRequest && !string.IsNullOrEmpty(postDataString))
+                        AngryWasp.Logger.Log.Instance.Write(Log_Severity.None, $"{methodName} params: {postDataString}");
+
+                    AngryWasp.Logger.Log.Instance.WriteNonFatalException(ex);
                 }
 
                 jsonString = null;
@@ -119,7 +102,7 @@ namespace Nerva.Rpc
             }
         }
 
-        public static bool MakeHttpRequest(string url, out string returnString)
+        public static bool MakeHttpRequest(string url, Log log, out string returnString)
         {
             try
             {
@@ -137,16 +120,10 @@ namespace Nerva.Rpc
             }
             catch (Exception ex)
             {
-               switch (Configuration.ErrorLogVerbosity)
+                if (log.LogNetworkErrors)
                 {
-                    case Error_Log_Verbosity.Normal:
-                    case Error_Log_Verbosity.Detailed:
-                        Log.Instance.Write(Log_Severity.Error, $"Could not complete HTTP call: {url}");
-                        break;
-                    case Error_Log_Verbosity.Full:
-                        Log.Instance.Write(Log_Severity.Error, $"Could not complete HTTP call: {url}");
-                        Log.Instance.WriteNonFatalException(ex);
-                        break;
+                    AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, $"Could not complete HTTP call: {url}");
+                    AngryWasp.Logger.Log.Instance.WriteNonFatalException(ex);
                 }
                 
                 returnString = null;

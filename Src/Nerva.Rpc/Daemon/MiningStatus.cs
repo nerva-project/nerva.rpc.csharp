@@ -5,8 +5,8 @@ namespace Nerva.Rpc.Daemon
 {
     public class MiningStatus : Request<object, MiningStatusResponseData>
     {
-        public MiningStatus(Action<MiningStatusResponseData> completeAction, Action<RequestError> failedAction, uint port = 17566)
-            : base (null, completeAction, failedAction, port) { }
+        public MiningStatus(Action<MiningStatusResponseData> completeAction, Action<RequestError> failedAction, uint port = 17566, Log log = null)
+            : base (null, completeAction, failedAction, port, log) { }
 
         protected override bool DoRequest(out MiningStatusResponseData result)
         {
@@ -30,12 +30,12 @@ namespace Nerva.Rpc.Daemon
         public bool IsBackground { get; set; }
 
         [JsonProperty("speed")]
-        public int Speed { get; set; }
+        public uint Speed { get; set; }
 
         [JsonProperty("status")]
         public string Status { get; set; }
 
         [JsonProperty("threads_count")]
-        public int ThreadCount { get; set; }
+        public uint ThreadCount { get; set; }
     }
 }
