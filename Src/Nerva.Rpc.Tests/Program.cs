@@ -55,6 +55,8 @@ namespace Nerva.Rpc.Tests
 
             AngryWasp.Logger.Log.Instance.Write($"Generated: {w} {p}");
             Test_CreateHwWallet(w, p);
+            Test_GetAccounts();
+            Test_CloseWallet();
         }
 
         public static ulong ToAtomicUnits(double i)
@@ -146,19 +148,6 @@ namespace Nerva.Rpc.Tests
                 AngryWasp.Logger.Log.Instance.Write("OpenWallet: Passed");
             }, (RequestError e) => {
                 AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "OpenWallet: Failed");
-                Environment.Exit(1);
-            }, walletPort).Run();  
-        }
-
-        public static bool Test_OpenHwWallet(string wallet_file, string wallet_pass)
-        {
-            return new OpenHwWallet(new OpenHwWalletRequestData {
-                FileName = wallet_file,
-                Password = wallet_pass
-            }, (string result) => {
-                AngryWasp.Logger.Log.Instance.Write("OpenHwWallet: Passed");
-            }, (RequestError e) => {
-                AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "OpenHwWallet: Failed");
                 Environment.Exit(1);
             }, walletPort).Run();  
         }

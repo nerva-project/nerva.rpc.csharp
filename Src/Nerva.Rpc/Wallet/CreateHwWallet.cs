@@ -23,6 +23,9 @@ namespace Nerva.Rpc.Wallet
 
         [JsonProperty("device_name")]
         public string DeviceName => DEVICE_NAME;
+
+        [JsonProperty("restore_height")]
+        public uint RestoreHeight { get; set; } = 1;
     }
 
     public class CreateHwWalletResponseData

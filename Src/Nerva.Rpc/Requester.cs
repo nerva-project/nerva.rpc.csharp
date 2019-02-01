@@ -50,7 +50,7 @@ namespace Nerva.Rpc
                     if (log.LogRpcRequest && paramData != null)
                         AngryWasp.Logger.Log.Instance.Write(Log_Severity.None, $"{request.MethodName} params: {paramData}");
 
-                    AngryWasp.Logger.Log.Instance.WriteNonFatalException(ex);
+                    AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, $".NET Exception, {ex.Message}");
                 }
 
                 jsonString = null;
@@ -94,7 +94,7 @@ namespace Nerva.Rpc
                     if (log.LogRpcRequest && !string.IsNullOrEmpty(postDataString))
                         AngryWasp.Logger.Log.Instance.Write(Log_Severity.None, $"{methodName} params: {postDataString}");
 
-                    AngryWasp.Logger.Log.Instance.WriteNonFatalException(ex);
+                    AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, $".NET Exception, {ex.Message}");
                 }
 
                 jsonString = null;
@@ -123,7 +123,7 @@ namespace Nerva.Rpc
                 if (log.LogNetworkErrors)
                 {
                     AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, $"Could not complete HTTP call: {url}");
-                    AngryWasp.Logger.Log.Instance.WriteNonFatalException(ex);
+                    AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, $".NET Exception, {ex.Message}");
                 }
                 
                 returnString = null;
