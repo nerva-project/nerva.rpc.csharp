@@ -47,15 +47,14 @@ namespace Nerva.Rpc.Tests
             AngryWasp.Logger.Log.CreateInstance(true);
 
             Process.Start("nerva-wallet-rpc", "--testnet --rpc-bind-port 22525 --daemon-address 127.0.0.1:18566 --disable-rpc-login --wallet-dir ./");
-            Thread.Sleep(3000);
+            Thread.Sleep(1000);
             CommandLineParser cmd = CommandLineParser.Parse(args);
 
             string w = StringHelper.GenerateRandomHexString(4, true);
             string p = StringHelper.GenerateRandomHexString(4, true);
-            
-            Test_RestoreWalletFromKeys(w, p);
-            Test_MakeIntegratedAddress(ADDRESS_A, ADDRESS_B);
-            Test_SplitIntegratedAddress(INT_A, ADDRESS_A, PID_A);
+
+            AngryWasp.Logger.Log.Instance.Write($"Generated: {w} {p}");
+            Test_CreateHwWallet(w, p);
         }
 
         public static ulong ToAtomicUnits(double i)
@@ -125,6 +124,19 @@ namespace Nerva.Rpc.Tests
             }, walletPort).Run();  
         }
 
+        public static bool Test_CreateHwWallet(string wallet_file, string wallet_pass)
+        {
+            return new CreateHwWallet(new CreateHwWalletRequestData {
+                FileName = wallet_file,
+                Password = wallet_pass
+            }, (CreateHwWalletResponseData result) => {
+                AngryWasp.Logger.Log.Instance.Write("CreateHwWallet: Passed");
+            }, (RequestError e) => {
+                AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "CreateHwWallet: Failed");
+                Environment.Exit(1);
+            }, walletPort).Run();  
+        }
+
         public static bool Test_OpenWallet(string wallet_file, string wallet_pass)
         {
             return new OpenWallet(new OpenWalletRequestData {
@@ -134,6 +146,19 @@ namespace Nerva.Rpc.Tests
                 AngryWasp.Logger.Log.Instance.Write("OpenWallet: Passed");
             }, (RequestError e) => {
                 AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "OpenWallet: Failed");
+                Environment.Exit(1);
+            }, walletPort).Run();  
+        }
+
+        public static bool Test_OpenHwWallet(string wallet_file, string wallet_pass)
+        {
+            return new OpenHwWallet(new OpenHwWalletRequestData {
+                FileName = wallet_file,
+                Password = wallet_pass
+            }, (string result) => {
+                AngryWasp.Logger.Log.Instance.Write("OpenHwWallet: Passed");
+            }, (RequestError e) => {
+                AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "OpenHwWallet: Failed");
                 Environment.Exit(1);
             }, walletPort).Run();  
         }
