@@ -52,11 +52,6 @@ namespace Nerva.Rpc.Tests
 
             string w = StringHelper.GenerateRandomHexString(4, true);
             string p = StringHelper.GenerateRandomHexString(4, true);
-
-            AngryWasp.Logger.Log.Instance.Write($"Generated: {w} {p}");
-            Test_CreateHwWallet(w, p);
-            Test_GetAccounts();
-            Test_CloseWallet();
         }
 
         public static ulong ToAtomicUnits(double i)
