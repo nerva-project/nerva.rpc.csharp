@@ -60,9 +60,6 @@ namespace Nerva.Rpc.Wallet
         [JsonProperty("tx_key")]
         public string TxKey { get; set; } = string.Empty;
 
-        [JsonProperty("amount_keys")]
-        public string[] AmountKeys { get; set; } = null;
-
         [JsonProperty("amount")]
         public ulong Amount { get; set; } = 0;
     }

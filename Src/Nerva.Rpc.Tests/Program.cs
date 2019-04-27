@@ -50,8 +50,9 @@ namespace Nerva.Rpc.Tests
             Thread.Sleep(1000);
             CommandLineParser cmd = CommandLineParser.Parse(args);
 
-            string w = StringHelper.GenerateRandomHexString(4, true);
-            string p = StringHelper.GenerateRandomHexString(4, true);
+            //string w = StringHelper.GenerateRandomHexString(4, true);
+            //string p = StringHelper.GenerateRandomHexString(4, true);
+            ChainAnalysis.CheckChainForTxType(Tx_Type.RCTTypeFullBulletproof);
         }
 
         public static ulong ToAtomicUnits(double i)

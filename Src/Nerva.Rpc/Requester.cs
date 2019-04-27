@@ -101,34 +101,5 @@ namespace Nerva.Rpc
                 return false;
             }
         }
-
-        public static bool MakeHttpRequest(string url, Log log, out string returnString)
-        {
-            try
-            {
-                HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
-                req.Method = "GET";
-                HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
-
-                using (Stream stream = resp.GetResponseStream())
-                {
-                    StreamReader reader = new StreamReader(stream, System.Text.Encoding.UTF8);
-                    returnString = reader.ReadToEnd();
-                }
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                if (log.LogNetworkErrors)
-                {
-                    AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, $"Could not complete HTTP call: {url}");
-                    AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, $".NET Exception, {ex.Message}");
-                }
-                
-                returnString = null;
-                return false;
-            }
-        }
     }
 }

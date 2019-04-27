@@ -25,16 +25,16 @@ namespace Nerva.Rpc.Daemon
         public uint BlockSize { get; set; }
 
         [JsonProperty("depth")]
-        public uint Depth { get; set; }
+        public ulong Depth { get; set; }
 
         [JsonProperty("difficulty")]
-        public uint Difficulty { get; set; }
+        public ulong Difficulty { get; set; }
 
         [JsonProperty("hash")]
         public string Hash { get; set; }
 
         [JsonProperty("height")]
-        public uint Height { get; set; }
+        public ulong Height { get; set; }
 
         [JsonProperty("major_version")]
         public uint MajorVersion { get; set; }
@@ -52,12 +52,12 @@ namespace Nerva.Rpc.Daemon
         public uint IsOrphaned { get; set; }
 
         [JsonProperty("prev_hash")]
-        public uint PreviousHash { get; set; }
+        public string PreviousHash { get; set; }
 
         [JsonProperty("reward")]
-        public uint Reward { get; set; }
+        public ulong Reward { get; set; }
 
         [JsonProperty("timestamp")]
-        public uint Timestamp { get; set; }
+        public ulong Timestamp { get; set; }
     }
 }

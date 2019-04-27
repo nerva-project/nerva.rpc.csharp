@@ -1,9 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../Nerva.Rpc.targets"/>
   <PropertyGroup>
-    <TargetFramework>net471</TargetFramework>
-    <OutputType>WinExe</OutputType>
-    <AssemblyName>Nerva.Rpc.Tests</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Nerva.Rpc.Tests</RootNamespace>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nerva.Rpc\Nerva.Rpc.csproj"/>
