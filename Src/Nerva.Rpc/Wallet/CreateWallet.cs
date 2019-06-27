@@ -5,8 +5,9 @@ namespace Nerva.Rpc.Wallet
 {
     public class CreateWallet : Request<CreateWalletRequestData, CreateWalletResponseData>
     {
-        public CreateWallet(CreateWalletRequestData rpcData, Action<CreateWalletResponseData> completeAction, Action<RequestError> failedAction, uint port = 17566, Log log = null)
-            : base (rpcData, completeAction, failedAction, port, log) { }
+        public CreateWallet(CreateWalletRequestData rpcData, Action<CreateWalletResponseData> completeAction, Action<RequestError> failedAction,
+            string host = "http://127.0.0.1", uint port = 17566, Log log = null)
+            : base (rpcData, completeAction, failedAction, host, port, log) { }
             
         protected override bool DoRequest(out CreateWalletResponseData result)
         {

@@ -8,10 +8,12 @@ namespace Nerva.Rpc
 {
     public class Requester
     {
+        private string host;
         private uint port;
 
-        public Requester(uint port)
+        public Requester(string host, uint port)
         {
+            this.host = host;
             this.port = port;
         }
 
@@ -19,7 +21,7 @@ namespace Nerva.Rpc
         {
             try
             {
-                string url = $"http://127.0.0.1:{port}/json_rpc";
+                string url = $"{host}:{port}/json_rpc";
 
                 string reqData = request.Encode();
                 byte[] reqDataBytes = Encoding.ASCII.GetBytes(reqData);
@@ -62,7 +64,7 @@ namespace Nerva.Rpc
         {
             try
             {
-                string url = $"http://127.0.0.1:{port}/{methodName}";
+                string url = $"{host}:{port}/{methodName}";
    
                 HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
                 req.Method = "POST";

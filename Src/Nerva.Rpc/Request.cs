@@ -13,15 +13,17 @@ namespace Nerva.Rpc
     {
         protected RequestError error;
         protected Log log;
+        protected string host;
         protected uint port;
         protected T_Req rpcData;
         protected Action<T_Resp> completeAction;
         protected Action<RequestError> failedAction;
 
-        public Request(T_Req rpcData, Action<T_Resp> completeAction, Action<RequestError> failedAction, uint port = 17566, Log log = null)
+        public Request(T_Req rpcData, Action<T_Resp> completeAction, Action<RequestError> failedAction, string host = "http://127.0.0.1", uint port = 17566, Log log = null)
         {
             this.error = new RequestError();
             this.log = (log == null) ? Log.Presets.Normal : log;
+            this.host = host;
             this.port = port;
 
             this.rpcData = rpcData;
@@ -59,7 +61,7 @@ namespace Nerva.Rpc
         {
             result = null;
 
-            if (!new Requester(port).MakeRpcRequest(methodName, postData, log, out result))
+            if (!new Requester(host, port).MakeRpcRequest(methodName, postData, log, out result))
                 return false;
 
             var status = JObject.Parse(result)["status"].Value<string>();
@@ -124,7 +126,7 @@ namespace Nerva.Rpc
 
             string paramData = param != null ? jr.Encode() : "none";
 
-            if (!new Requester(port).MakeJsonRpcRequest(jr, log, out result))
+            if (!new Requester(host, port).MakeJsonRpcRequest(jr, log, out result))
                 return false;
 
             var e = JObject.Parse(result)["error"];

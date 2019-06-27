@@ -5,9 +5,9 @@ namespace Nerva.Rpc.Wallet
 {
     public class RestoreWalletFromKeys : Request<RestoreWalletFromKeysRequestData, RestoreWalletFromKeysResponseData>
     {
-        public RestoreWalletFromKeys(RestoreWalletFromKeysRequestData rpcData, Action<RestoreWalletFromKeysResponseData> completeAction, 
-            Action<RequestError> failedAction, uint port = 17566, Log log = null)
-            : base (rpcData, completeAction, failedAction, port, log) { }
+        public RestoreWalletFromKeys(RestoreWalletFromKeysRequestData rpcData, Action<RestoreWalletFromKeysResponseData> completeAction, Action<RequestError> failedAction,
+            string host = "http://127.0.0.1", uint port = 17566, Log log = null)
+            : base (rpcData, completeAction, failedAction, host, port, log) { }
             
         protected override bool DoRequest(out RestoreWalletFromKeysResponseData result)
         {
