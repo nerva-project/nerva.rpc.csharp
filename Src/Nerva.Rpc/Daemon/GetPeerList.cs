@@ -31,9 +31,6 @@ namespace Nerva.Rpc.Daemon
     [JsonObject]
     public class GetPeerListResponseDataItem
     {
-        [JsonProperty("host")]
-        public ulong Host { get; set; } = 0;
-
         [JsonProperty("id")]
         public ulong ID { get; set; } = 0;
 
