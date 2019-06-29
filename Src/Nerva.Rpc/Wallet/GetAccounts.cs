@@ -5,19 +5,25 @@ using Newtonsoft.Json;
 
 namespace Nerva.Rpc.Wallet
 {
-    public class GetAccounts : Request<object, GetAccountsResponseData>
+    public class GetAccounts : Request<GetAccountsRequestData, GetAccountsResponseData>
     {
-        public GetAccounts(Action<GetAccountsResponseData> completeAction, Action<RequestError> failedAction, 
-            string host = "http://127.0.0.1", uint port = 17566, Log log = null)
-            : base (null, completeAction, failedAction, host, port, log) { }
+        public GetAccounts(GetAccountsRequestData rpcData, Action<GetAccountsResponseData> completeAction, Action<RequestError> failedAction, 
+            string host = Config.DEFAULT_HOST, uint port = Config.DEFAULT_PORT, Log log = null)
+            : base (rpcData, completeAction, failedAction, host, port, log) { }
             
         protected override bool DoRequest(out GetAccountsResponseData result)
         {
             string json = null;
-            bool r = JsonRpcRequest("get_accounts", null, out json);
+            bool r = JsonRpcRequest("get_accounts", rpcData, out json);
             result = r ? JsonConvert.DeserializeObject<ResponseData<GetAccountsResponseData>>(json).Result : null;
             return r;
         }
+    }
+
+    public class GetAccountsRequestData
+    {
+        [JsonProperty("tag")]
+        public string Tag { get; set; }
     }
 
     [JsonObject]

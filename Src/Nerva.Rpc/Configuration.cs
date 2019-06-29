@@ -39,4 +39,10 @@ namespace Nerva.Rpc
 
         public bool OnlyLogRpcOnError { get; set; } = true;
     }
+
+    public static class Config
+    {
+        public const uint DEFAULT_PORT = 17566;
+        public const string DEFAULT_HOST = "http://127.0.0.1";
+    }
 }

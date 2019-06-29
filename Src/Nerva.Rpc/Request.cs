@@ -19,7 +19,7 @@ namespace Nerva.Rpc
         protected Action<T_Resp> completeAction;
         protected Action<RequestError> failedAction;
 
-        public Request(T_Req rpcData, Action<T_Resp> completeAction, Action<RequestError> failedAction, string host = "http://127.0.0.1", uint port = 17566, Log log = null)
+        public Request(T_Req rpcData, Action<T_Resp> completeAction, Action<RequestError> failedAction, string host = Config.DEFAULT_HOST, uint port = Config.DEFAULT_PORT, Log log = null)
         {
             this.error = new RequestError();
             this.log = (log == null) ? Log.Presets.Normal : log;
