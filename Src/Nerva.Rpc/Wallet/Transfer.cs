@@ -30,23 +30,35 @@ namespace Nerva.Rpc.Wallet
     [JsonObject]
     public class TransferRequestData
     {
-        [JsonProperty("payment_id")]
-        public string PaymentId { get; set; } = string.Empty;
-
         [JsonProperty("destinations")]
         public List<TransferDestination> Destinations { get; set; } = new List<TransferDestination>();
 
         [JsonProperty("account_index")]
         public uint AccountIndex { get; set; } = 0;
 
-        [JsonProperty("mixin")]
-        public uint Mixin => 5;
-        
-        [JsonProperty("get_tx_key")]
-        public bool GetTxKey => true;
+        [JsonProperty("subaddr_indices")]
+        public List<uint> SubAddressIndices { get; set; } = new List<uint>();
 
         [JsonProperty("priority")]
         public uint Priority { get; set; } = (uint)Send_Priority.Default;
+
+        [JsonProperty("unlock_time")]
+        public uint UnlockTime { get; set; } = 0;
+
+        [JsonProperty("payment_id")]
+        public string PaymentId { get; set; } = string.Empty;
+        
+        [JsonProperty("get_tx_key")]
+        public bool GetTxKey { get; set; } = true;
+
+        [JsonProperty("do_not_relay")]
+        public bool DoNotRelay { get; set; } = false;
+
+        [JsonProperty("get_tx_hex")]
+        public bool GetTxHex { get; set; } = false;
+
+        [JsonProperty("get_tx_metadata")]
+        public bool GetTxMetadata { get; set; } = false;
     }
 
     [JsonObject]

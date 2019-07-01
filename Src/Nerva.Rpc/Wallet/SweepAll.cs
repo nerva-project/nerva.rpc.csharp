@@ -25,19 +25,19 @@ namespace Nerva.Rpc.Wallet
         public string Address { get; set; }
 
         [JsonProperty("account_index")]
-        public uint AccountIndex { get; set; }
+        public uint AccountIndex { get; set; } = 0;
 
         [JsonProperty("subaddr_indices")]
-        public List<uint> SubaddressIndices { get; set; }
+        public List<uint> SubaddressIndices { get; set; } = new List<uint>();
 
         [JsonProperty("priority")]
-        public uint Priority { get; set; } = 0;
+        public uint Priority { get; set; } = (uint)Send_Priority.Default;
 
         [JsonProperty("unlock_time")]
         public uint UnlockTime { get; set; } = 0;
 
         [JsonProperty("get_tx_keys")]
-        public bool GetTxKeys { get; set; }
+        public bool GetTxKeys { get; set; } = true;
 
         [JsonProperty("do_not_relay")]
         public bool DoNotRelay { get; set; } = false;
