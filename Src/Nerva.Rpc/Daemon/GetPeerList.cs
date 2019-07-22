@@ -6,9 +6,9 @@ namespace Nerva.Rpc.Daemon
 {
     public class GetPeerList : Request<object, GetPeerListResponseData>
     {
-        public GetPeerList(StartMiningRequestData rpcData, Action<GetPeerListResponseData> completeAction, Action<RequestError> failedAction, 
+        public GetPeerList(Action<GetPeerListResponseData> completeAction, Action<RequestError> failedAction, 
             string host = Config.DEFAULT_HOST, uint port = Config.DEFAULT_PORT, Log log = null)
-            : base (rpcData, completeAction, failedAction, host, port, log) { }
+            : base (null, completeAction, failedAction, host, port, log) { }
 
         protected override bool DoRequest(out GetPeerListResponseData result)
         {
