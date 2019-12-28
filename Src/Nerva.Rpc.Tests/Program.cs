@@ -39,6 +39,8 @@ namespace Nerva.Rpc.Tests
         private const string SEED_B = "because bicycle omission visited austere seeded runway upright stylishly often abducts pipeline toolbox abort segments vacation cider subtly ribbon gauze tanks huts eight factual abducts";
 
         private static uint daemonPort = 18566;
+
+        private static string host = "http://127.0.0.1";
         private static uint walletPort = 22525;
 
         [STAThread]
@@ -74,7 +76,7 @@ namespace Nerva.Rpc.Tests
             }, (RequestError e) => {
                 AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "RestoreWalletFromSeed: Failed");
                 Environment.Exit(1);
-            }, walletPort).Run(); 
+            }, host, walletPort).Run(); 
         }
 
         public static bool Test_RestoreWalletFromKeys(string wallet_file, string wallet_pass)
@@ -93,7 +95,7 @@ namespace Nerva.Rpc.Tests
             }, (RequestError e) => {
                 AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "RestoreWalletFromKeys: Failed");
                 Environment.Exit(1);
-            }, walletPort).Run(); 
+            }, host, walletPort).Run(); 
         }
 
         public static bool Test_GetBlockTemplate()
@@ -106,7 +108,7 @@ namespace Nerva.Rpc.Tests
             }, (RequestError e) => {
                 AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "GetBlockTemplate: Failed");
                 Environment.Exit(1);
-            }, daemonPort).Run();  
+            }, host, daemonPort).Run();  
         }
 
         public static bool Test_CreateWallet(string wallet_file, string wallet_pass)
@@ -119,7 +121,7 @@ namespace Nerva.Rpc.Tests
             }, (RequestError e) => {
                 AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "CreateWallet: Failed");
                 Environment.Exit(1);
-            }, walletPort).Run();  
+            }, host, walletPort).Run();  
         }
 
         public static bool Test_CreateHwWallet(string wallet_file, string wallet_pass)
@@ -132,7 +134,7 @@ namespace Nerva.Rpc.Tests
             }, (RequestError e) => {
                 AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "CreateHwWallet: Failed");
                 Environment.Exit(1);
-            }, walletPort).Run();  
+            }, host, walletPort).Run();  
         }
 
         public static bool Test_OpenWallet(string wallet_file, string wallet_pass)
@@ -145,7 +147,7 @@ namespace Nerva.Rpc.Tests
             }, (RequestError e) => {
                 AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "OpenWallet: Failed");
                 Environment.Exit(1);
-            }, walletPort).Run();  
+            }, host, walletPort).Run();  
         }
 
         public static bool Test_CloseWallet()
@@ -155,7 +157,7 @@ namespace Nerva.Rpc.Tests
             }, (RequestError e) => {
                 AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "CloseWallet: Failed");
                 Environment.Exit(1);
-            }, walletPort).Run();  
+            }, host, walletPort).Run();  
         }
 
         public static bool Test_StopWallet()
@@ -165,17 +167,18 @@ namespace Nerva.Rpc.Tests
             }, (RequestError e) => {
                 AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "StopWallet: Failed");
                 Environment.Exit(1);
-            }, walletPort).Run();  
+            }, host, walletPort).Run();  
         }
 
         public static bool Test_GetAccounts()
         {
-            return new GetAccounts((GetAccountsResponseData result) => {
+            return new GetAccounts(new GetAccountsRequestData {
+                }, (GetAccountsResponseData result) => {
                 AngryWasp.Logger.Log.Instance.Write($"GetAccounts: Passed, {result.TotalBalance} XNV");
             }, (RequestError e) => {
                 AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "GetAccounts: Failed");
                 Environment.Exit(1);
-            }, walletPort).Run();  
+            }, host, walletPort).Run();  
         }
 
         public static bool Test_GetTransfers()
@@ -187,7 +190,7 @@ namespace Nerva.Rpc.Tests
             }, (RequestError e) => {
                 AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "GetTransfers: Failed");
                 Environment.Exit(1);
-            }, walletPort).Run();  
+            }, host, walletPort).Run();  
         }
 
         public static bool Test_QueryKey()
@@ -198,7 +201,7 @@ namespace Nerva.Rpc.Tests
                 AngryWasp.Logger.Log.Instance.Write($"QueryKey: Passed, {result.PublicViewKey}");
             }, (RequestError e) => {
                 AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "QueryKery: Failed");
-            }, walletPort).Run();  
+            }, host, walletPort).Run();  
         }
 
         public static bool Test_CreateAccount()
@@ -209,7 +212,7 @@ namespace Nerva.Rpc.Tests
                 AngryWasp.Logger.Log.Instance.Write("CreateAccount: Passed");
             }, (RequestError e) => {
                 AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "CreateAccount: Failed");
-            }, walletPort).Run();  
+            }, host, walletPort).Run();  
         }
 
         public static bool Test_Transfer_NoPaymentId()
@@ -229,7 +232,7 @@ namespace Nerva.Rpc.Tests
                 AngryWasp.Logger.Log.Instance.Write($"Transfer Without PID: Passed, {result.Amount} XNV");
             }, (RequestError e) => {
                 AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "Transfer Without PID: Failed");
-            }, walletPort).Run();  
+            }, host, walletPort).Run();  
         }
 
         public static bool Test_MakeIntegratedAddress(string w1, string w2)
@@ -241,7 +244,7 @@ namespace Nerva.Rpc.Tests
             }, (RequestError e) => {
                 AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "MakeIntegratedAddress: Failed");
                 Environment.Exit(1);
-            }, walletPort).Run(); 
+            }, host, walletPort).Run(); 
 
             new MakeIntegratedAddress(new MakeIntegratedAddressRequestData {
                 PaymentId = PID_A,
@@ -251,7 +254,7 @@ namespace Nerva.Rpc.Tests
             }, (RequestError e) => {
                 AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "MakeIntegratedAddress: Failed");
                 Environment.Exit(1);
-            }, walletPort).Run();  
+            }, host, walletPort).Run();  
 
             return true;
         }
@@ -268,7 +271,7 @@ namespace Nerva.Rpc.Tests
             }, (RequestError e) => {
                 AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "SplitIntegratedAddress: Failed");
                 Environment.Exit(1);
-            }, walletPort).Run(); 
+            }, host, walletPort).Run(); 
 
             return true;
         }
@@ -291,7 +294,7 @@ namespace Nerva.Rpc.Tests
                 AngryWasp.Logger.Log.Instance.Write($"Transfer: Passed, {result.Amount} XNV");
             }, (RequestError e) => {
                 AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "Transfer: Failed");
-            }, walletPort).Run();  
+            }, host, walletPort).Run();  
         }
 
         public static bool Test_GetBlockCount()
@@ -301,7 +304,7 @@ namespace Nerva.Rpc.Tests
             }, (RequestError e) => {
                 AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "GetBlockCount: Failed");
                 Environment.Exit(1);
-            }, daemonPort).Run();  
+            }, host, daemonPort).Run();  
         }
 
         public static bool Test_GetInfo()
@@ -311,7 +314,7 @@ namespace Nerva.Rpc.Tests
             }, (RequestError e) => {
                 AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "GetInfo: Failed");
                 Environment.Exit(1);
-            }, daemonPort).Run();  
+            }, host, daemonPort).Run();  
         }
 
         public static bool Test_GetConnections()
@@ -321,7 +324,7 @@ namespace Nerva.Rpc.Tests
             }, (RequestError e) => {
                 AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "GetConnections: Failed");
                 Environment.Exit(1);
-            }, daemonPort).Run();  
+            }, host, daemonPort).Run();  
         }
 
         public static bool Test_StartMining()
@@ -334,7 +337,7 @@ namespace Nerva.Rpc.Tests
             }, (RequestError e) => {
                 AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "StartMining: Failed");
                 Environment.Exit(1);
-            }, daemonPort).Run();  
+            }, host, daemonPort).Run();  
         }
 
         public static bool Test_StopMining()
@@ -344,7 +347,7 @@ namespace Nerva.Rpc.Tests
             }, (RequestError e) => {
                 AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "StopMining: Failed");
                 Environment.Exit(1);
-            }, daemonPort).Run();  
+            }, host, daemonPort).Run();  
         }
 
         public static bool Test_StopDaemon()
@@ -354,7 +357,7 @@ namespace Nerva.Rpc.Tests
             }, (RequestError e) => {
                 AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "StopDaemon: Failed");
                 Environment.Exit(1);
-            }, daemonPort).Run();  
+            }, host, daemonPort).Run();  
         }
 
         public static void Test_SetBans()
@@ -366,16 +369,16 @@ namespace Nerva.Rpc.Tests
         private static bool Test_SetBans(bool ban)
         {
             return new SetBans(new SetBansRequestData {
-                Bans = new List<Ban> {
-                    new Ban { Host = "0.0.0.0", Banned = ban },
-                    new Ban { Host = "0.1.0.1", Banned = ban }
+                Bans = new List<SetBansItem> {
+                    new SetBansItem { Host = "0.0.0.0", Banned = ban },
+                    new SetBansItem { Host = "0.1.0.1", Banned = ban }
                 }
             }, (string result) => {
                 AngryWasp.Logger.Log.Instance.Write("SetBans: Passed");
             }, (RequestError e) => {
                 AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "SetBans: Failed");
                 Environment.Exit(1);
-            }, daemonPort).Run(); 
+            }, host, daemonPort).Run(); 
         }
     }
 }
