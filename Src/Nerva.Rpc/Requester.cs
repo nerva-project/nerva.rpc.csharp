@@ -17,7 +17,7 @@ namespace Nerva.Rpc
             this.port = port;
         }
 
-        public bool MakeJsonRpcRequest(RequestData request, Log log, out string jsonString)
+        public bool MakeJsonRpcRequest(RequestData request, Log log, ref RequestError error, out string jsonString)
         {
             try
             {
@@ -43,6 +43,13 @@ namespace Nerva.Rpc
 
                 return true;
             }
+            catch (WebException)
+            {
+                jsonString = null;
+                error.Code = int.MaxValue;
+                error.Message = "Error making RPC connection";
+                return false;
+            }
             catch (Exception ex)
             {
                 if (log.LogNetworkErrors)
@@ -60,7 +67,7 @@ namespace Nerva.Rpc
             }
         }
 
-        public bool MakeRpcRequest(string methodName, string postDataString, Log log, out string jsonString)
+        public bool MakeRpcRequest(string methodName, string postDataString, Log log, ref RequestError error, out string jsonString)
         {
             try
             {
@@ -87,6 +94,13 @@ namespace Nerva.Rpc
                 }
 
                 return true;
+            }
+            catch (WebException)
+            {
+                jsonString = null;
+                error.Code = int.MaxValue;
+                error.Message = "Error making RPC connection";
+                return false;
             }
             catch (Exception ex)
             {

@@ -61,16 +61,13 @@ namespace Nerva.Rpc
         {
             result = null;
 
-            if (!new Requester(host, port).MakeRpcRequest(methodName, postData, log, out result))
+            if (!new Requester(host, port).MakeRpcRequest(methodName, postData, log, ref error, out result))
                 return false;
 
             var status = JObject.Parse(result)["status"].Value<string>();
             var ok = status.ToLower() == "ok";
 
             string paramData = !string.IsNullOrEmpty(postData) ? postData : "None";
-
-            
-
             bool hasError = false;
 
             if (!ok)
@@ -126,7 +123,7 @@ namespace Nerva.Rpc
 
             string paramData = param != null ? jr.Encode() : "none";
 
-            if (!new Requester(host, port).MakeJsonRpcRequest(jr, log, out result))
+            if (!new Requester(host, port).MakeJsonRpcRequest(jr, log, ref error, out result))
                 return false;
 
             var e = JObject.Parse(result)["error"];
