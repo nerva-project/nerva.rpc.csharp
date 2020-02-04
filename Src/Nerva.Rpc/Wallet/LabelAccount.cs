@@ -9,13 +9,7 @@ namespace Nerva.Rpc.Wallet
             string host = Config.DEFAULT_HOST, uint port = Config.DEFAULT_PORT, Log log = null)
             : base (rpcData, completeAction, failedAction, host, port, log) { }
             
-        protected override bool DoRequest(out string result)
-        {
-            string json = null;
-            bool r = JsonRpcRequest("label_account", rpcData, out json);
-            result = r ? JsonConvert.DeserializeObject<ResponseData<string>>(json).Result : null;
-            return r;
-        }
+        protected override bool DoRequest(out string result) => JsonRpcRequest("label_account", rpcData, out result);
     }
 
     [JsonObject]

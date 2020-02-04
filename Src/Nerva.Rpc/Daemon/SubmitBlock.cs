@@ -10,10 +10,6 @@ namespace Nerva.Rpc.Daemon
             string host = Config.DEFAULT_HOST, uint port = Config.DEFAULT_PORT, Log log = null)
             : base (rpcData, completeAction, failedAction, host, port, log) { }
             
-        protected override bool DoRequest(out string result)
-        {
-            bool r = JsonRpcRequest("submit_block", rpcData, out result);
-            return r;
-        }
+        protected override bool DoRequest(out string result) => JsonRpcRequest("submit_block", rpcData, out result);
     }
 }
