@@ -1,6 +1,5 @@
 <Project>
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net48</TargetFrameworks>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
@@ -16,7 +15,7 @@
     <OutputPath>../../Bin/$(Configuration)</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../../External/AngryWasp.Logger/Src/AngryWasp.Logger/AngryWasp.Logger.csproj" />
-    <ProjectReference Include="../../External/AngryWasp.Helpers/Src/AngryWasp.Helpers/AngryWasp.Helpers.csproj" />
+    <PackageReference Include="AngryWasp.Helpers" Version="*"/>
+    <PackageReference Include="AngryWasp.Logger" Version="*"/>
   </ItemGroup>
 </Project>
