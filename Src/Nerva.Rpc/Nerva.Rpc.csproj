@@ -1,10 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="../Nerva.Rpc.targets"/>
+  <Import Project="../../External/AngryWasp.Build/AngryWasp.Build.Library.targets"/>
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <OutputType>Library</OutputType>
+    <TargetFrameworks>netstandard2.1;net48</TargetFrameworks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>Nerva.Rpc.CSharp</PackageId>
+    <Title>$(PackageId)</Title>
+    <Version>1.0.1</Version>
+    <Authors>AngryWasp</Authors>
+    <PackageDescription>RPC interface for Nerva (XNV)</PackageDescription>
+    <PackageLicenseFile>AngryWasp.LICENSE.txt</PackageLicenseFile>
+    <RepositoryUrl>https://bitbucket.org/nerva-project/nerva.rpc.csharp</RepositoryUrl>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="../../External/AngryWasp.Build/LICENSE.txt" Pack="true" PackagePath="$(PackageLicenseFile)"/>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AngryWasp.Logger" Version="*"/>
+    <PackageReference Include="AngryWasp.Helpers" Version="*"/>
     <PackageReference Include="Newtonsoft.Json" Version="*"/>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net48" Version="*"/>
   </ItemGroup>
 </Project>

@@ -50,11 +50,6 @@ namespace Nerva.Rpc.Tests
 
             Process.Start("nerva-wallet-rpc", "--testnet --rpc-bind-port 22525 --daemon-address 127.0.0.1:18566 --disable-rpc-login --wallet-dir ./");
             Thread.Sleep(1000);
-            CommandLineParser cmd = CommandLineParser.Parse(args);
-
-            //string w = StringHelper.GenerateRandomHexString(4, true);
-            //string p = StringHelper.GenerateRandomHexString(4, true);
-            ChainAnalysis.CheckChainForTxType(Tx_Type.RCTTypeFullBulletproof);
         }
 
         public static ulong ToAtomicUnits(double i)
