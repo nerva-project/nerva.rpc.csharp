@@ -2,7 +2,6 @@
   <Import Project="../../External/AngryWasp.Build/AngryWasp.Build.Library.targets"/>
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFrameworks>netstandard2.1;net48</TargetFrameworks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>Nerva.Rpc.CSharp</PackageId>
@@ -20,6 +19,5 @@
     <PackageReference Include="AngryWasp.Logger" Version="*"/>
     <PackageReference Include="AngryWasp.Helpers" Version="*"/>
     <PackageReference Include="Newtonsoft.Json" Version="*"/>
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net48" Version="*"/>
   </ItemGroup>
 </Project>
