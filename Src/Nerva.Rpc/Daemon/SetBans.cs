@@ -7,7 +7,7 @@ namespace Nerva.Rpc.Daemon
     public class SetBans : Request<SetBansRequestData, string>
     {
         public SetBans(SetBansRequestData rpcData, Action<string> completeAction, Action<RequestError> failedAction, 
-            string host = Config.DEFAULT_HOST, uint port = Config.DEFAULT_PORT, Log log = null)
+            string host = Config.DEFAULT_HOST, uint port = Config.DEFAULT_DAEMON_PORT, Log log = null)
             : base (rpcData, completeAction, failedAction, host, port, log) { }
             
         protected override bool DoRequest(out string result) => JsonRpcRequest("set_bans", rpcData, out result);

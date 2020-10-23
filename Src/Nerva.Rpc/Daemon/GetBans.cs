@@ -7,7 +7,7 @@ namespace Nerva.Rpc.Daemon
     public class GetBans : Request<object, GetBansResponseData>
     {
         public GetBans(Action<GetBansResponseData> completeAction, Action<RequestError> failedAction, 
-            string host = Config.DEFAULT_HOST, uint port = Config.DEFAULT_PORT, Log log = null)
+            string host = Config.DEFAULT_HOST, uint port = Config.DEFAULT_DAEMON_PORT, Log log = null)
             : base (null, completeAction, failedAction, host, port, log) { }
             
         protected override bool DoRequest(out GetBansResponseData result)

@@ -42,7 +42,8 @@ namespace Nerva.Rpc
 
     public static class Config
     {
-        public const uint DEFAULT_PORT = 17566;
-        public const string DEFAULT_HOST = "http://127.0.0.1";
+        public const uint DEFAULT_DAEMON_PORT = 17566;
+        public const uint DEFAULT_WALLET_PORT = 17568;
+        public const string DEFAULT_HOST = "127.0.0.1";
     }
 }

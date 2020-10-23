@@ -7,7 +7,7 @@ namespace Nerva.Rpc.Wallet
     public class GetAddress : Request<GetAddressRequestData, GetAddressResponseData>
     {
         public GetAddress(GetAddressRequestData rpcData, Action<GetAddressResponseData> completeAction, Action<RequestError> failedAction, 
-            string host = Config.DEFAULT_HOST, uint port = Config.DEFAULT_PORT, Log log = null)
+            string host = Config.DEFAULT_HOST, uint port = Config.DEFAULT_WALLET_PORT, Log log = null)
             : base (rpcData, completeAction, failedAction, host, port, log) { }
             
         protected override bool DoRequest(out GetAddressResponseData result)

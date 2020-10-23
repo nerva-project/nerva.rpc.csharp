@@ -7,7 +7,7 @@ namespace Nerva.Rpc.Daemon
     public class GetBlockTemplate : Request<GetBlockTemplateRequestData, GetBlockTemplateResponseData>
     {
         public GetBlockTemplate(GetBlockTemplateRequestData rpcData, Action<GetBlockTemplateResponseData> completeAction, Action<RequestError> failedAction, 
-            string host = Config.DEFAULT_HOST, uint port = Config.DEFAULT_PORT, Log log = null)
+            string host = Config.DEFAULT_HOST, uint port = Config.DEFAULT_DAEMON_PORT, Log log = null)
             : base (rpcData, completeAction, failedAction, host, port, log) { }
             
         protected override bool DoRequest(out GetBlockTemplateResponseData result)

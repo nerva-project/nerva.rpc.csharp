@@ -7,7 +7,7 @@ namespace Nerva.Rpc.Wallet
     public class TagAccounts : Request<TagAccountsRequestData, string>
     {
         public TagAccounts(TagAccountsRequestData rpcData, Action<string> completeAction, Action<RequestError> failedAction, 
-            string host = Config.DEFAULT_HOST, uint port = Config.DEFAULT_PORT, Log log = null)
+            string host = Config.DEFAULT_HOST, uint port = Config.DEFAULT_WALLET_PORT, Log log = null)
             : base (rpcData, completeAction, failedAction, host, port, log) { }
             
         protected override bool DoRequest(out string result) => JsonRpcRequest("tag_accounts", rpcData, out result);

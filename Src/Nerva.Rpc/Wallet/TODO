@@ -12,8 +12,6 @@ make_integrated_address
 split_integrated_address
 make_uri
 parse_uri
-set_tx_notes
-get_tx_notes
 sign
 verify
 export_key_images

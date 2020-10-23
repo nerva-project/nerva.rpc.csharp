@@ -7,7 +7,7 @@ namespace Nerva.Rpc.Wallet
     public class GetAccountTags : Request<object, GetAccountTagsResponseData>
     {
         public GetAccountTags(Action<GetAccountTagsResponseData> completeAction, Action<RequestError> failedAction, 
-            string host = Config.DEFAULT_HOST, uint port = Config.DEFAULT_PORT, Log log = null)
+            string host = Config.DEFAULT_HOST, uint port = Config.DEFAULT_WALLET_PORT, Log log = null)
             : base (null, completeAction, failedAction, host, port, log) { }
             
         protected override bool DoRequest(out GetAccountTagsResponseData result)
