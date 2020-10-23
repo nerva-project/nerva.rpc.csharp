@@ -23,22 +23,22 @@ namespace Nerva.Rpc.Wallet
     public class GetTransfersRequestData
     {
         [JsonProperty("in")]
-        public bool In => true;
+        public bool In { get; set; } = true;
 
         [JsonProperty("out")]
-        public bool Out => true;
+        public bool Out { get; set; } = true;
 
         [JsonProperty("pending")]
-        public bool Pending => true;
+        public bool Pending { get; set; } = true;
 
         [JsonProperty("failed")]
-        public bool Failed => false;
+        public bool Failed { get; set; } = false;
 
         [JsonProperty("pool")]
-        public bool Pool => false;
+        public bool Pool { get; set; } = false;
 
         [JsonProperty("filter_by_height")]
-        public bool FilterByHeight => false;
+        public bool FilterByHeight { get; set; } = false;
 
         [JsonProperty("min_height")]
         public ulong ScanFromHeight { get; set; } = 0;
