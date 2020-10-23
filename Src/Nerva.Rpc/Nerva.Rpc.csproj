@@ -6,11 +6,11 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>Nerva.Rpc.CSharp</PackageId>
     <Title>$(PackageId)</Title>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <Authors>AngryWasp</Authors>
     <PackageDescription>RPC interface for Nerva (XNV)</PackageDescription>
     <PackageLicenseFile>AngryWasp.LICENSE.txt</PackageLicenseFile>
-    <RepositoryUrl>https://bitbucket.org/nerva-project/nerva.rpc.csharp</RepositoryUrl>
+    <RepositoryUrl>https://bitbucket.org/nerva-xnv/nerva.rpc.csharp</RepositoryUrl>
   </PropertyGroup>
   <ItemGroup>
     <None Include="../../External/AngryWasp.Build/LICENSE.txt" Pack="true" PackagePath="$(PackageLicenseFile)"/>

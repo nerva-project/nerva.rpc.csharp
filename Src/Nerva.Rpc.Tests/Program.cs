@@ -38,9 +38,9 @@ namespace Nerva.Rpc.Tests
         private const string ADDRESS_B = "NV2K9m13tbr3NhSubtR3tD3kzWhEbqrkuZi3ts9XxZvqgeMCG1MkQQgF4cpiuEWdEeWiZhgzGdFKPcSNByCLaass2h6ftye3Q";
         private const string SEED_B = "because bicycle omission visited austere seeded runway upright stylishly often abducts pipeline toolbox abort segments vacation cider subtly ribbon gauze tanks huts eight factual abducts";
 
-        private static uint daemonPort = 18566;
+        private static uint daemonPort = 17566;
 
-        private static string host = "http://127.0.0.1";
+        private static string host = "127.0.0.1";
         private static uint walletPort = 22525;
 
         [STAThread]
@@ -48,13 +48,69 @@ namespace Nerva.Rpc.Tests
         {
             AngryWasp.Logger.Log.CreateInstance(true);
 
-            Process.Start("nerva-wallet-rpc", "--testnet --rpc-bind-port 22525 --daemon-address 127.0.0.1:18566 --disable-rpc-login --wallet-dir ./");
-            Thread.Sleep(1000);
+            Test_GetTxNote();
+            string note = StringHelper.GenerateRandomString(10);
+            AngryWasp.Logger.Log.Instance.Write($"Attempting to write note: {note}");
+            Test_SetTxNote(note);
+            Test_GetTxNote();
         }
 
         public static ulong ToAtomicUnits(double i)
         {
             return (ulong)(i * 1000000000000.0d);
+        }
+
+        public static bool Test_GetTxNote()
+        {
+            return new GetTransfers(new GetTransfersRequestData {
+                AccountIndex = 0
+            }, (GetTransfersResponseData result) => {
+                
+                if (result.Incoming.Count == 0)
+                {
+                    AngryWasp.Logger.Log.Instance.Write(Log_Severity.Warning, "GetTransfers returned 0 transactions. Cannot continue");
+                    return;
+                }
+                var req = new GetTxNotesRequestData();
+                req.TxIds.Add(result.Incoming[0].TxId);
+
+                new GetTxNotes(req, (GetTxNotesResponseData result2) => {
+                    AngryWasp.Logger.Log.Instance.Write($"GetTxNote: Passed, {result2.Notes[0]}");
+                }, (RequestError e) => {
+                    AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "GetTxNote: Failed");
+                }, host, walletPort).Run();
+                
+            }, (RequestError e) => {
+                AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, $"GetTransfers: Failed, {e.Code}, {e.Message}");
+                Environment.Exit(1);
+            }, host, walletPort).Run();  
+        }
+
+        public static bool Test_SetTxNote(string note)
+        {
+            return new GetTransfers(new GetTransfersRequestData {
+                AccountIndex = 0
+            }, (GetTransfersResponseData result) => {
+                
+                if (result.Incoming.Count == 0)
+                {
+                    AngryWasp.Logger.Log.Instance.Write(Log_Severity.Warning, "GetTransfers returned 0 transactions. Cannot continue");
+                    return;
+                }
+                var req = new SetTxNotesRequestData();
+                req.TxIds.Add(result.Incoming[0].TxId);
+                req.Notes.Add(note);
+
+                new SetTxNotes(req, (string result2) => {
+                    AngryWasp.Logger.Log.Instance.Write("SetTxNote: Passed");
+                }, (RequestError e) => {
+                    AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, "SetTxNote: Failed");
+                }, host, walletPort).Run();
+                
+            }, (RequestError e) => {
+                AngryWasp.Logger.Log.Instance.Write(Log_Severity.Error, $"GetTransfers: Failed, {e.Code}, {e.Message}");
+                Environment.Exit(1);
+            }, host, walletPort).Run();  
         }
 
         public static bool Test_RestoreWalletFromSeed(string wallet_file, string wallet_pass)

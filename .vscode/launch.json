@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run test",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/Bin/Debug/netcoreapp3.1/Nerva.Rpc.Tests.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "stopAtEntry": false
+        }
+    ]
+}
