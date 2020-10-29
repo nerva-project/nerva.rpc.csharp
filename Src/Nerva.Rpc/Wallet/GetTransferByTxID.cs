@@ -35,9 +35,6 @@ namespace Nerva.Rpc.Wallet
     [JsonObject]
     public class GetTransferByTxIDResponseData : TransferItem
     {
-        [JsonProperty("unlock_time")]
-        public ulong UnlockTime { get; set; } = 0;
-
         [JsonProperty("subaddr_index")]
         public SubAddressIndex SubAddressIndex { get; set; } = null;
 

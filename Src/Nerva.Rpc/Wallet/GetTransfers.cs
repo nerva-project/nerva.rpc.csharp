@@ -84,6 +84,18 @@ namespace Nerva.Rpc.Wallet
         [JsonProperty("note")]
         public string Note { get; set; } = string.Empty;
 
+        [JsonProperty("unlock_time")]
+        public ulong UnlockTime { get; set; } = 100;
+
+        [JsonProperty("locked")]
+        public bool Locked { get; set; } = true;
+
+        [JsonProperty("confirmations")]
+        public ulong Confirmations { get; set; } = 0;
+
+        [JsonProperty("suggested_confirmations_threshold")]
+        public ulong SuggestedConfirmationThreshold { get; set; } = 0;
+
         [JsonProperty("type")]
         public string Type { get; set; } = string.Empty;
 
