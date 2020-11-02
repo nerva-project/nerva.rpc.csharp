@@ -64,9 +64,6 @@ namespace Nerva.Rpc.Wallet
     [JsonObject]
     public class TransferResponseData
     {
-        [JsonProperty("fee")]
-        public ulong Fee { get; set; } = 0;
-
         [JsonProperty("tx_hash")]
         public string TxHash { get; set; } = string.Empty;
 
@@ -75,5 +72,20 @@ namespace Nerva.Rpc.Wallet
 
         [JsonProperty("amount")]
         public ulong Amount { get; set; } = 0;
+
+        [JsonProperty("fee")]
+        public ulong Fee { get; set; } = 0;
+
+        [JsonProperty("tx_blob")]
+        public string TxBlob { get; set; } = string.Empty;
+
+        [JsonProperty("tx_metadata")]
+        public string TxMetadata { get; set; } = string.Empty;
+
+        [JsonProperty("multisig_txset")]
+        public string MultisigTxSet { get; set; } = string.Empty;
+
+        [JsonProperty("unsigned_txset")]
+        public string UnsignedTxSet { get; set; } = string.Empty;
     }
 }
