@@ -6,7 +6,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>Nerva.Rpc.CSharp</PackageId>
     <Title>$(PackageId)</Title>
-    <Version>1.0.6</Version>
+    <Version>1.0.6.1</Version>
     <Authors>AngryWasp</Authors>
     <PackageDescription>RPC interface for Nerva (XNV)</PackageDescription>
     <PackageLicenseFile>AngryWasp.LICENSE.txt</PackageLicenseFile>
