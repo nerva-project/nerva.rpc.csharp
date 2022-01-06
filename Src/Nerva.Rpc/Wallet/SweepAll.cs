@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Nerva.Rpc.Wallet.Helpers;
 
 namespace Nerva.Rpc.Wallet
 {
@@ -31,7 +32,7 @@ namespace Nerva.Rpc.Wallet
         public List<uint> SubaddressIndices { get; set; } = new List<uint>();
 
         [JsonProperty("priority")]
-        public uint Priority { get; set; } = (uint)Send_Priority.Default;
+        public uint Priority { get; set; } = (uint)SendPriority.Default;
 
         [JsonProperty("unlock_time")]
         public uint UnlockTime { get; set; } = 0;

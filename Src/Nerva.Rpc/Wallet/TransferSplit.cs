@@ -5,23 +5,23 @@ using Nerva.Rpc.Wallet.Helpers;
 
 namespace Nerva.Rpc.Wallet
 {
-    public class Transfer : Request<TransferRequestData, TransferResponseData>
+    public class TransferSplit : Request<TransferSplitRequestData, TransferSplitResponseData>
     {
-        public Transfer (TransferRequestData rpcData, Action<TransferResponseData> completeAction, Action<RequestError> failedAction,
+        public TransferSplit (TransferSplitRequestData rpcData, Action<TransferSplitResponseData> completeAction, Action<RequestError> failedAction,
             string host = Config.DEFAULT_HOST, uint port = Config.DEFAULT_WALLET_PORT, Log log = null)
             : base (rpcData, completeAction, failedAction, host, port, log) { }
             
-        protected override bool DoRequest(out TransferResponseData result)
+        protected override bool DoRequest(out TransferSplitResponseData result)
         {
             string json = null;
-            bool r = JsonRpcRequest("transfer", rpcData, out json);
-            result = r ? JsonConvert.DeserializeObject<ResponseData<TransferResponseData>>(json).Result : null;
+            bool r = JsonRpcRequest("transfer_split", rpcData, out json);
+            result = r ? JsonConvert.DeserializeObject<ResponseData<TransferSplitResponseData>>(json).Result : null;
             return r;
         }
     }
 
     [JsonObject]
-    public class TransferRequestData
+    public class TransferSplitRequestData
     {
         [JsonProperty("destinations")]
         public List<TransferDestination> Destinations { get; set; } = new List<TransferDestination>();
@@ -41,8 +41,8 @@ namespace Nerva.Rpc.Wallet
         [JsonProperty("payment_id")]
         public string PaymentId { get; set; } = string.Empty;
         
-        [JsonProperty("get_tx_key")]
-        public bool GetTxKey { get; set; } = true;
+        [JsonProperty("get_tx_keys")]
+        public bool GetTxKeys { get; set; } = true;
 
         [JsonProperty("do_not_relay")]
         public bool DoNotRelay { get; set; } = false;
@@ -55,25 +55,25 @@ namespace Nerva.Rpc.Wallet
     }
 
     [JsonObject]
-    public class TransferResponseData
+    public class TransferSplitResponseData
     {
-        [JsonProperty("tx_hash")]
-        public string TxHash { get; set; } = string.Empty;
+        [JsonProperty("tx_hash_list")]
+        public List<string> TxHashList { get; set; } = new List<string>();
 
-        [JsonProperty("tx_key")]
-        public string TxKey { get; set; } = string.Empty;
+        [JsonProperty("tx_key_list")]
+        public List<string> TxKeyList { get; set; } = new List<string>();
 
-        [JsonProperty("amount")]
-        public ulong Amount { get; set; } = 0;
+        [JsonProperty("amount_list")]
+        public List<ulong> AmountList { get; set; } = new List<ulong>();
 
-        [JsonProperty("fee")]
-        public ulong Fee { get; set; } = 0;
+        [JsonProperty("fee_list")]
+        public List<ulong> FeeList { get; set; } = new List<ulong>();
 
-        [JsonProperty("tx_blob")]
-        public string TxBlob { get; set; } = string.Empty;
+        [JsonProperty("tx_blob_list")]
+        public List<string> TxBlobList { get; set; } = new List<string>();
 
-        [JsonProperty("tx_metadata")]
-        public string TxMetadata { get; set; } = string.Empty;
+        [JsonProperty("tx_metadata_list")]
+        public List<string> TxMetadataList { get; set; } = new List<string>();
 
         [JsonProperty("multisig_txset")]
         public string MultisigTxSet { get; set; } = string.Empty;
