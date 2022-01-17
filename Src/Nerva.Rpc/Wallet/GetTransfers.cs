@@ -45,6 +45,12 @@ namespace Nerva.Rpc.Wallet
 
         [JsonProperty("account_index")]
         public uint AccountIndex { get; set; } = 0;
+
+        [JsonProperty("subaddr_indices")]
+        public List<uint> SubaddrIndices { get; set; } = new List<uint>();
+
+        [JsonProperty("all_accounts")]
+        public bool AllAccounts { get; set; } = false;
     }
 
     [JsonObject]
@@ -58,6 +64,12 @@ namespace Nerva.Rpc.Wallet
 
         [JsonProperty("pending")]
         public List<TransferItem> Pending { get; set; } = new List<TransferItem>();
+
+        [JsonProperty("failed")]
+        public List<TransferItem> Failed { get; set; } = new List<TransferItem>();
+
+        [JsonProperty("pool")]
+        public List<TransferItem> Pool { get; set; } = new List<TransferItem>();
     }
 
     [JsonObject]
