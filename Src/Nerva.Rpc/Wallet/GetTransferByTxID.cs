@@ -23,6 +23,9 @@ namespace Nerva.Rpc.Wallet
     {
         [JsonProperty("txid")]
         public string TxID { get; set; }
+
+        [JsonProperty("account_index")]
+        public uint AccountIndex { get; set; } = 0;
     }
 
     [JsonObject]

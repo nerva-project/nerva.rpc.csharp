@@ -113,6 +113,9 @@ namespace Nerva.Rpc.Wallet
 
         [JsonProperty("destinations")]
         public List<TransferDestination> Destinations { get; set; } = new List<TransferDestination>();
+
+        [JsonProperty("subaddr_index")]
+        public SubaddressIndex SubaddrIndex { get; set; } = new SubaddressIndex();
     }
 
     [JsonObject]
@@ -123,5 +126,15 @@ namespace Nerva.Rpc.Wallet
 
         [JsonProperty("address")]
         public string Address { get; set; } = string.Empty;
+    }
+
+    [JsonObject]
+    public class SubaddressIndex
+    {
+        [JsonProperty("major")]
+        public uint Major { get; set; } = 0;
+
+        [JsonProperty("minor")]
+        public uint Minor { get; set; } = 0;
     }
 }
